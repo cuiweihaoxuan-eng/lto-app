@@ -1,12 +1,21 @@
-name: Sync to GitHub
+name: Sync & Deploy to GitHub Pages
 
 on:
   schedule:
     - cron: '0 * * * *'  # 每小时执行一次
   workflow_dispatch:  # 允许手动触发
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-sync"
+  cancel-in-progress: false
+
 jobs:
-  sync:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -14,10 +23,23 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Sync changes
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add -A
-          git diff --staged --quiet || git commit -m "chore: hourly sync $(date +'%Y-%m-%d %H:%M')"
-          git push
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
