@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogFooter } from '
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
 import { UploadDialog } from './UploadDialog';
+import { AddBidDialog } from './AddBidDialog';
 
 // ===== Mock 数据 =====
 
@@ -289,9 +290,10 @@ interface ContentPanelProps {
   setUploadOpen: (open: boolean) => void;
   uploadField: string;
   setUploadField: (field: string) => void;
+  onOpenAddBid: (categoryId: string) => void;
 }
 
-function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChange, nodeCompleted, onNodeComplete, uploadOpen, setUploadOpen, uploadField, setUploadField }: ContentPanelProps) {
+function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChange, nodeCompleted, onNodeComplete, uploadOpen, setUploadOpen, uploadField, setUploadField, onOpenAddBid }: ContentPanelProps) {
   const navigate = useNavigate();
   const { taskId } = useParams();
 
@@ -538,190 +540,29 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
   if (categoryId === '3-1') {
     return (
       <div className="flex flex-col h-full">
-        <div className="px-4 py-3 border-b flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-gray-900">{categoryName}</span>
-          <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">集团六到位要求</span>
-          <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
+        <div className="px-4 py-3 border-b flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium text-gray-900">{categoryName}</span>
+            <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">集团六到位要求</span>
+            <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">是否应标 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.biddingType || ''}
-                onChange={(e) => setFormData({ ...formData, biddingType: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">投标时间 <span className="text-red-500">*</span></label>
-              <input
-                type="date"
-                value={formData.biddingTime || ''}
-                onChange={(e) => setFormData({ ...formData, biddingTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">投标主体 <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                placeholder="请输入投标主体"
-                value={formData.biddingSubject || ''}
-                onChange={(e) => setFormData({ ...formData, biddingSubject: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-          </div>
-          {/* 招标文件 */}
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">招标文件</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('招标文件'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
+            <div className="text-sm text-gray-600 mb-4">
+              通过录入前向投标入口，填写发标信息、发标应对信息、应标结果等完整信息，记录参标过程。
+            </div>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              <Button onClick={() => onOpenAddBid('3-1')} className="gap-2">
+                <Plus className="w-4 h-4" />
+                录入前向投标
               </Button>
             </div>
-            {(allFiles['招标文件'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['招标文件'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-          {/* 投标依据标书 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">投标依据/标书</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('投标依据标书'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
+            <div className="mt-4 text-xs text-gray-500">
+              参标记录包含：招标文件、发标应对信息、投标依据、中标/丢标/弃标等信息
             </div>
-            {(allFiles['投标依据标书'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['投标依据标书'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
-          {/* 发标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">发标证明文件</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('发标证明文件'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
-            </div>
-            {(allFiles['发标证明文件'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['发标证明文件'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-          {/* 投标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">投标证明文件</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('投标证明文件'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
-            </div>
-            {(allFiles['投标证明文件'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['投标证明文件'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-          {/* 投标报价清单 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">投标报价清单</span>
-                <span className="text-xs px-1 py-0.5 bg-orange-50 text-orange-600 rounded">省内</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('投标报价清单'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
-            </div>
-            {(allFiles['投标报价清单'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['投标报价清单'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-          {/* 弃标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">弃标证明文件</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('弃标证明文件'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
-            </div>
-            {(allFiles['弃标证明文件'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['弃标证明文件'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-        </div>
-        <div className="p-4 border-t bg-white">
-          <Button className="w-full" size="sm" onClick={() => {
-            if (formData.biddingType && formData.biddingTime && formData.biddingSubject) {
-              onNodeComplete('3-1-1');
-            }
-          }}>保存</Button>
         </div>
       </div>
     );
@@ -731,112 +572,29 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
   if (categoryId === '3-2') {
     return (
       <div className="flex flex-col h-full">
-        <div className="px-4 py-3 border-b flex items-center gap-2 flex-wrap">
-          <span className="font-medium text-gray-900">{categoryName}</span>
-          <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">集团六到位要求</span>
-          <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">应标结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.bidWinResult || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinResult: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="中标">中标</option>
-                <option value="丢标">丢标</option>
-                <option value="未开标">未开标</option>
-                <option value="已签约">已签约</option>
-                <option value="未签约">未签约</option>
-                <option value="弃标">弃标</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">中标时间</label>
-              <input
-                type="date"
-                value={formData.bidWinTime || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">中标金额（万元）</label>
-              <input
-                type="number"
-                placeholder="请输入"
-                value={formData.bidWinAmount || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinAmount: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">签约对象</label>
-              <input
-                type="text"
-                placeholder="请输入"
-                value={formData.signObject || ''}
-                onChange={(e) => setFormData({ ...formData, signObject: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
+        <div className="px-4 py-3 border-b flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium text-gray-900">{categoryName}</span>
+            <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">集团六到位要求</span>
+            <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
           </div>
-          {/* 中标结果通知书 */}
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">中标结果通知书</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('中标结果通知书'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
+            <div className="text-sm text-gray-600 mb-4">
+              应标结果的完整记录已在"录入前向投标"中填写，包含应标结果、中标通知书、丢标复盘文件等。
+            </div>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              <Button onClick={() => onOpenAddBid('3-2')} className="gap-2">
+                <Plus className="w-4 h-4" />
+                录入前向投标
               </Button>
             </div>
-            {(allFiles['中标结果通知书'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['中标结果通知书'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
-          </div>
-          {/* 丢标复盘文件 */}
-          <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">丢标复盘文件</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('丢标复盘文件'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
-              </Button>
+            <div className="mt-4 text-xs text-gray-500">
+              应标结果记录包含：应标结果、中标金额、签约对象、中标通知书、丢标复盘文件等信息
             </div>
-            {(allFiles['丢标复盘文件'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['丢标复盘文件'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
-        </div>
-        <div className="p-4 border-t bg-white">
-          <Button className="w-full" size="sm" onClick={() => {
-            if (formData.bidWinResult) {
-              onNodeComplete('3-2-1');
-            }
-          }}>保存</Button>
         </div>
       </div>
     );
@@ -846,65 +604,28 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
   if (categoryId === '3-3') {
     return (
       <div className="flex flex-col h-full">
-        <div className="px-4 py-3 border-b flex items-center gap-3">
-          <span className="font-medium text-gray-900">{categoryName}</span>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">谈判记录 <span className="text-red-500">*</span></label>
-              <textarea
-                placeholder="请输入谈判记录内容"
-                value={formData.negotiationRecord || ''}
-                onChange={(e) => setFormData({ ...formData, negotiationRecord: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={4}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">谈判结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.negotiationResult || ''}
-                onChange={(e) => setFormData({ ...formData, negotiationResult: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="达成合作">达成合作</option>
-                <option value="继续洽谈">继续洽谈</option>
-                <option value="未达成">未达成</option>
-              </select>
-            </div>
+        <div className="px-4 py-3 border-b flex items-center justify-between">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-medium text-gray-900">{categoryName}</span>
+            <span className="text-xs px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded">集团六到位要求</span>
           </div>
-          {/* 谈判记录上传 */}
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
           <div className="bg-white rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">谈判记录上传</span>
-                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('谈判记录上传'); setUploadOpen(true); }}>
-                <Plus className="w-3 h-3" /> 上传
+            <div className="text-sm text-gray-600 mb-4">
+              商务谈判记录可在"录入前向投标"弹窗中填写，包含谈判记录、谈判结果、谈判记录上传等。
+            </div>
+            <div className="bg-blue-50 rounded-lg p-4 text-center">
+              <Button onClick={() => onOpenAddBid('3-3')} className="gap-2">
+                <Plus className="w-4 h-4" />
+                录入前向投标
               </Button>
             </div>
-            {(allFiles['谈判记录上传'] || []).length > 0 ? (
-              <div className="space-y-1">
-                {(allFiles['谈判记录上传'] || []).map((f, i) => (
-                  <div key={i} className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
-                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
-                  </div>
-                ))}
-              </div>
-            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+            <div className="mt-4 text-xs text-gray-500">
+              商务谈判包含：谈判记录、谈判结果、谈判记录文件上传等
+            </div>
           </div>
-        </div>
-        <div className="p-4 border-t bg-white">
-          <Button className="w-full" size="sm" onClick={() => {
-            if (formData.negotiationRecord && formData.negotiationResult) {
-              onNodeComplete('3-3-1');
-            }
-          }}>保存</Button>
         </div>
       </div>
     );
@@ -1612,12 +1333,23 @@ export function SixStandardDetail() {
     return initial;
   });
 
+  // 新增投标弹窗状态
+  const [addBidOpen, setAddBidOpen] = useState(false);
+  const [addBidCategory, setAddBidCategory] = useState<string>('');
+
   const toggleModule = (moduleId: string) => {
     setExpandedModules((prev) =>
       prev.includes(moduleId)
         ? prev.filter((id) => id !== moduleId)
         : [...prev, moduleId]
     );
+  };
+
+  // 打开新增投标弹窗
+  const handleOpenAddBid = (categoryId: string) => {
+    setAddBidCategory(categoryId);
+    setAddBidOpen(true);
+    setActiveCategoryId(null); // 关闭当前面板
   };
 
   const handleShowRule = (name: string, rule: string, completed?: boolean, e?: React.MouseEvent) => {
@@ -1836,9 +1568,30 @@ export function SixStandardDetail() {
             setUploadOpen={setUploadOpen}
             uploadField={uploadField}
             setUploadField={setUploadField}
+            onOpenAddBid={handleOpenAddBid}
           />
         </SheetContent>
       </Sheet>
+
+      {/* 新增投标弹窗 */}
+      <AddBidDialog
+        open={addBidOpen}
+        onOpenChange={setAddBidOpen}
+        onSubmit={(data) => {
+          console.log('提交投标数据:', data);
+          // 根据不同节点标记完成
+          if (addBidCategory === '3-1') {
+            handleNodeComplete('3-1-1');
+            handleNodeComplete('3-1-2');
+          } else if (addBidCategory === '3-2') {
+            handleNodeComplete('3-2-1');
+            handleNodeComplete('3-2-2');
+          } else if (addBidCategory === '3-3') {
+            handleNodeComplete('3-3-1');
+            handleNodeComplete('3-3-2');
+          }
+        }}
+      />
     </div>
   );
 }
