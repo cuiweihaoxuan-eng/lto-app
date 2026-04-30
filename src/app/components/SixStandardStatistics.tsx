@@ -242,7 +242,7 @@ export function SixStandardStatistics() {
       {/* ===== 地市列表 ===== */}
       {viewLevel === 'province' && (
         <div
-          className="absolute bottom-0 left-0 right-0 z-10 max-h-[80vh] overflow-y-auto bg-white/80 backdrop-blur-lg rounded-t-2xl shadow-[0_-2px_16px_rgba(0,0,0,0.06)]"
+          className="absolute left-0 right-0 z-10 top-[48vh] bottom-0 max-h-[52vh] overflow-y-auto bg-white/80 backdrop-blur-lg rounded-t-2xl shadow-[0_-2px_16px_rgba(0,0,0,0.06)]"
           style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}
         >
           <div className="px-3 pb-4 pt-1 space-y-2">
