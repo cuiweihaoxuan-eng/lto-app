@@ -242,7 +242,7 @@ export function SixStandardStatistics() {
       {/* ===== 地市列表 ===== */}
       {viewLevel === 'province' && (
         <div
-          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto bg-white"
+          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto bg-white/80 backdrop-blur-lg rounded-t-2xl shadow-[0_-2px_16px_rgba(0,0,0,0.06)]"
         >
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...citySixData].sort((a, b) => calcCityRate(b) - calcCityRate(a)).map((city, i) => {
@@ -291,8 +291,6 @@ export function SixStandardStatistics() {
               );
             })}
           </div>
-          {/* 底部渐变收尾层 */}
-          <div className="h-20 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none" />
         </div>
       )}
 
@@ -321,8 +319,6 @@ export function SixStandardStatistics() {
               </div>
             ))}
           </div>
-          {/* 底部渐变收尾层 */}
-          <div className="h-20 bg-gradient-to-t from-white via-white/60 to-transparent pointer-events-none" />
         </div>
       )}
     </div>
