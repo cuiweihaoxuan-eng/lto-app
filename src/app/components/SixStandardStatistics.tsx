@@ -242,8 +242,7 @@ export function SixStandardStatistics() {
       {/* ===== 地市列表 ===== */}
       {viewLevel === 'province' && (
         <div
-          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
-          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)' }}
+          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto bg-white rounded-t-2xl shadow-[0_-2px_16px_rgba(0,0,0,0.08)]"
         >
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...citySixData].sort((a, b) => calcCityRate(b) - calcCityRate(a)).map((city, i) => {
@@ -298,8 +297,7 @@ export function SixStandardStatistics() {
       {/* ===== 区县视图 ===== */}
       {viewLevel === 'city' && selectedCity && (
         <div
-          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
-          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)' }}
+          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto bg-white rounded-t-2xl shadow-[0_-2px_16px_rgba(0,0,0,0.08)]"
         >
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...districtData[selectedCity.adcode] || []].sort((a, b) => b.rate - a.rate).map((district, i) => (
