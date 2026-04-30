@@ -260,23 +260,8 @@ export function SixStandardStatistics() {
 
       {/* ===== 地市排名列表 ===== */}
       {viewLevel === 'province' && (
-        <div className="absolute bottom-0 left-0 right-0 z-10 bg-white/80 backdrop-blur-lg rounded-t-3xl shadow-[0_-4px_30px_rgba(0,0,0,0.12)] max-h-[55vh] overflow-y-auto">
-          <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 px-4 pt-3 pb-2 border-b border-gray-100">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-sm font-semibold text-gray-800">各地市六到位完成率排名</span>
-              <span className="text-xs text-gray-400">点击地市查看区县</span>
-            </div>
-            {/* 图例 */}
-            <div className="flex items-center gap-2 flex-wrap">
-              {sixCategories.map((cat) => (
-                <div key={cat.key} className="flex items-center gap-1">
-                  <div className={`w-2 h-2 rounded-full ${cat.barClass}`} />
-                  <span className="text-[10px] text-gray-500">{cat.key}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
+        <div className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
+          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}>
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...citySixData].sort((a, b) => calcCityRate(b) - calcCityRate(a)).map((city, i) => {
               const rate = calcCityRate(city);
@@ -348,15 +333,8 @@ export function SixStandardStatistics() {
 
       {/* ===== 区县视图 ===== */}
       {viewLevel === 'city' && selectedCity && (
-        <div className="absolute bottom-0 left-0 right-0 z-10 bg-white/80 backdrop-blur-lg rounded-t-3xl shadow-[0_-4px_30px_rgba(0,0,0,0.12)] max-h-[55vh] overflow-y-auto">
-          <div className="sticky top-0 bg-white/90 backdrop-blur-md z-10 px-4 pt-3 pb-2 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-gray-800">
-                {selectedCity.name.replace('市', '')} — 区县完成率排名
-              </span>
-              <button onClick={handleBack} className="text-xs text-blue-600 font-medium">返回地市</button>
-            </div>
-          </div>
+        <div className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
+          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}>
           <div className="px-3 pb-4 pt-2 space-y-2">
             {[...districtData[selectedCity.adcode] || []].sort((a, b) => b.rate - a.rate).map((district, i) => (
               <div key={i} className="bg-white/95 rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm border border-gray-100">
@@ -383,12 +361,6 @@ export function SixStandardStatistics() {
         </div>
       )}
 
-      {/* ===== 操作提示 ===== */}
-      {!loading && viewLevel === 'province' && (
-        <div className="absolute top-20 right-4 z-10 bg-black/40 backdrop-blur-sm rounded-lg px-3 py-1.5 text-white text-[10px] leading-tight text-center shadow">
-          拖拽移动 · 双指缩放<br />点击地市查看详情
-        </div>
-      )}
     </div>
   );
 }
