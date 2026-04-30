@@ -471,12 +471,8 @@ export function SixStandardList() {
             六到位清单
           </button>
           <button
-            onClick={() => setActiveTab('stats')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              activeTab === 'stats'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600'
-            }`}
+            onClick={() => navigate('/six-standard-statistics')}
+            className="flex-1 py-3 text-sm font-medium transition-colors text-gray-600"
           >
             六到位统计
           </button>
