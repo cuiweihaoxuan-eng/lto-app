@@ -551,16 +551,6 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               <Plus className="w-3 h-3" />
               录入前向投标
             </Button>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
-          </div>
-        </div>
-        {/* 规则说明 */}
-        <div className="px-4 py-2 bg-blue-50 border-b">
-          <div className="text-xs text-blue-700">
-            <span className="font-medium">点亮规则：</span>是否应标+投标时间+投标主体+招标文件+投标依据/标书均具备则点亮
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            <span className="font-medium">录入入口：</span>省内LTO六到位、集团BPM下发 | 同步类型：结构化内容具备下发
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -765,16 +755,6 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               <Plus className="w-3 h-3" />
               录入前向投标
             </Button>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
-          </div>
-        </div>
-        {/* 规则说明 */}
-        <div className="px-4 py-2 bg-blue-50 border-b">
-          <div className="text-xs text-blue-700">
-            <span className="font-medium">点亮规则：</span>应标结果+中标时间+中标金额+签约对象均具备则点亮
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            <span className="font-medium">录入入口：</span>省内LTO六到位、集团BPM下发 | 同步类型：结构化内容具备下发
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -898,16 +878,6 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               <Plus className="w-3 h-3" />
               录入前向投标
             </Button>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
-          </div>
-        </div>
-        {/* 规则说明 */}
-        <div className="px-4 py-2 bg-blue-50 border-b">
-          <div className="text-xs text-blue-700">
-            <span className="font-medium">点亮规则：</span>谈判记录+谈判时间均具备则点亮
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
-            <span className="font-medium">录入入口：</span>集团BPM下发 | 同步类型：结构化内容具备下发
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -1092,51 +1062,6 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">决策会名称</label>
-              <input
-                type="text"
-                placeholder="请输入决策会名称"
-                value={formData.decisionName || ''}
-                onChange={(e) => setFormData({ ...formData, decisionName: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">决策时间</label>
-              <input
-                type="date"
-                value={formData.decisionTime || ''}
-                onChange={(e) => setFormData({ ...formData, decisionTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">决策结果</label>
-              <select
-                value={formData.decisionResult || ''}
-                onChange={(e) => setFormData({ ...formData, decisionResult: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="通过">通过</option>
-                <option value="不通过">不通过</option>
-                <option value="暂缓">暂缓</option>
-                <option value="需要补充材料">需要补充材料</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">预计合作伙伴</label>
-              <input
-                type="text"
-                placeholder="请输入合作伙伴名称"
-                value={formData.partnerName || ''}
-                onChange={(e) => setFormData({ ...formData, partnerName: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
-          </div>
           {/* 标前决策会议决议上传 */}
           <div className="bg-white rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
@@ -1273,6 +1198,42 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               </div>
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
+          {/* 采购需求表 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-xs font-medium text-gray-700 mb-3">采购需求表</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[500px]">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">需求名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">需求编码</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">金额</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">日期</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">供应商</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">服务器采购需求</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">XQ-2026-001</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">¥50,000</td>
+                    <td className="px-3 py-2 whitespace-nowrap"><span className="text-green-600 bg-green-50 px-2 py-0.5 rounded">已完成</span></td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-15</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技</td>
+                  </tr>
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">软件授权采购</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">XQ-2026-002</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">¥30,000</td>
+                    <td className="px-3 py-2 whitespace-nowrap"><span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded">进行中</span></td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-20</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           {/* 采购方案 */}
           <div className="bg-white rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
@@ -1296,6 +1257,34 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               </div>
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
+          {/* 采购方案表 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-xs font-medium text-gray-700 mb-3">采购方案表</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[500px]">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">方案名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">方案编码</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">金额</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">日期</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">供应商</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">服务器采购方案</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">FA-2026-001</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">¥48,000</td>
+                    <td className="px-3 py-2 whitespace-nowrap"><span className="text-green-600 bg-green-50 px-2 py-0.5 rounded">已通过</span></td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-16</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           {/* 采购结果 */}
           <div className="bg-white rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
@@ -1318,6 +1307,34 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
                 ))}
               </div>
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
+          {/* 采购结果表 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="text-xs font-medium text-gray-700 mb-3">采购结果表</div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[500px]">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">结果名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">结果编码</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">金额</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">状态</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">日期</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">供应商</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">服务器采购合同</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">JG-2026-001</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">¥48,000</td>
+                    <td className="px-3 py-2 whitespace-nowrap"><span className="text-green-600 bg-green-50 px-2 py-0.5 rounded">已签约</span></td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-25</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div className="p-4 border-t bg-white">
@@ -1363,53 +1380,157 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               </div>
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
+          {/* 中标报价清单 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">中标报价清单</span>
+                <span className="text-xs px-1 py-0.5 bg-orange-50 text-orange-600 rounded">省内</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('中标报价清单'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['中标报价清单'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['中标报价清单'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
+          {/* 后向合同(报价清单) */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">后向合同(报价清单)</span>
+                <span className="text-xs px-1 py-0.5 bg-orange-50 text-orange-600 rounded">省内</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('后向合同报价清单'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['后向合同报价清单'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['后向合同报价清单'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
+          {/* 合同附件/集采订单 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">合同附件/集采订单</span>
+                <span className="text-xs px-1 py-0.5 bg-orange-50 text-orange-600 rounded">省内</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('合同附件集采订单'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['合同附件集采订单'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['合同附件集采订单'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
+          {/* 后向合同(图纸) */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">后向合同(图纸)</span>
+                <span className="text-xs px-1 py-0.5 bg-orange-50 text-orange-600 rounded">省内</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('后向合同图纸'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['后向合同图纸'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['后向合同图纸'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
           {/* 后向列表 */}
           <div className="bg-white rounded-lg p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">后向列表</div>
-            {mockBackwardList.map((item) => (
-              <div key={item.id} className="space-y-1.5">
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">合作伙伴名称</span>
-                  <span className="text-gray-900">{item.partnerName}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">后向类型</span>
-                  <span className="text-gray-900">{item.backwardType}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">后向名称</span>
-                  <span className="text-gray-900">{item.backwardName}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">后向编码</span>
-                  <span className="text-gray-900">{item.backwardCode}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">金额</span>
-                  <span className="text-orange-600">{item.amount}</span>
-                </div>
-              </div>
-            ))}
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[600px]">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">合作伙伴名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">后向类型</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">后向名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">后向编码</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">金额</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">签约时间</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">签约主体</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技有限公司</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">成本</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">XX设备采购</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">HX-2026-001</td>
+                    <td className="px-3 py-2 text-orange-600 whitespace-nowrap">¥600,000</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-10</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">浙江有数科技有限公司</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           {/* 后向厂家相关合同 */}
           <div className="bg-white rounded-lg p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">后向厂家相关合同</div>
-            {mockBackwardContracts.map((item) => (
-              <div key={item.id} className="space-y-1.5">
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">合作伙伴</span>
-                  <span className="text-gray-900">{item.partner}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">合同名称</span>
-                  <span className="text-gray-900">{item.contractName}</span>
-                </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-500">合同金额</span>
-                  <span className="text-orange-600">{item.amount}</span>
-                </div>
-              </div>
-            ))}
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs min-w-[600px]">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">序号</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">合作伙伴</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">合同名称</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">合同编号</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">签约时间</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">合同金额</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-600 whitespace-nowrap">签约主体</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  <tr className="hover:bg-gray-50">
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">1</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技有限公司</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">XX项目设备采购合同</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">HT-2026-001</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">2026-03-15</td>
+                    <td className="px-3 py-2 text-orange-600 whitespace-nowrap">¥800,000</td>
+                    <td className="px-3 py-2 text-gray-900 whitespace-nowrap">杭州XX科技有限公司</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -1426,42 +1547,20 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">变更内容 <span className="text-red-500">*</span></label>
-              <textarea
-                placeholder="请输入变更内容"
-                value={formData.changeContent || ''}
-                onChange={(e) => setFormData({ ...formData, changeContent: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">变更原因</label>
-              <textarea
-                placeholder="请输入变更原因"
-                value={formData.changeReason || ''}
-                onChange={(e) => setFormData({ ...formData, changeReason: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={2}
-              />
-            </div>
-          </div>
-          {/* 变更审核上传 */}
+          {/* 变更内容上传 */}
           <div className="bg-white rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-medium text-gray-700">变更审核记录</span>
+                <span className="text-xs font-medium text-gray-700">变更内容</span>
                 <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
               </div>
-              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('变更审核记录'); setUploadOpen(true); }}>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('变更内容'); setUploadOpen(true); }}>
                 <Plus className="w-3 h-3" /> 上传
               </Button>
             </div>
-            {(allFiles['变更审核记录'] || []).length > 0 ? (
+            {(allFiles['变更内容'] || []).length > 0 ? (
               <div className="space-y-1">
-                {(allFiles['变更审核记录'] || []).map((f, i) => (
+                {(allFiles['变更内容'] || []).map((f, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                     <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
@@ -1471,13 +1570,29 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               </div>
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
-        </div>
-        <div className="p-4 border-t bg-white">
-          <Button className="w-full" size="sm" onClick={() => {
-            if (formData.changeContent) {
-              onNodeComplete('5-2-1');
-            }
-          }}>保存</Button>
+          {/* 变更审核上传 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">变更审核</span>
+                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('变更审核'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['变更审核'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['变更审核'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
+          </div>
         </div>
       </div>
     );
@@ -1491,36 +1606,30 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="font-medium text-gray-900">{categoryName}</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">商机是否建档 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.assetArchive || ''}
-                onChange={(e) => setFormData({ ...formData, assetArchive: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+          {/* 商机是否建档上传 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">商机是否建档</span>
+                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
+                <span className="text-red-500 text-xs">*</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('商机是否建档'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
             </div>
-            <div>
-              <label className="text-xs text-gray-500 block mb-1">建档时间</label>
-              <input
-                type="date"
-                value={formData.archiveTime || ''}
-                onChange={(e) => setFormData({ ...formData, archiveTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
-            </div>
+            {(allFiles['商机是否建档'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['商机是否建档'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
-        </div>
-        <div className="p-4 border-t bg-white">
-          <Button className="w-full" size="sm" onClick={() => {
-            if (formData.assetArchive) {
-              onNodeComplete('6-1-1');
-            }
-          }}>保存</Button>
         </div>
       </div>
     );
@@ -1559,6 +1668,30 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
                 rows={3}
               />
             </div>
+          </div>
+          {/* 电话或在线台席项目记录上传 */}
+          <div className="bg-white rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-gray-700">电话或在线台席项目记录</span>
+                <span className="text-xs px-1 py-0.5 bg-blue-50 text-blue-600 rounded">集团</span>
+                <span className="text-red-500 text-xs">*</span>
+              </div>
+              <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={() => { setUploadField('服务台席项目记录'); setUploadOpen(true); }}>
+                <Plus className="w-3 h-3" /> 上传
+              </Button>
+            </div>
+            {(allFiles['服务台席项目记录'] || []).length > 0 ? (
+              <div className="space-y-1">
+                {(allFiles['服务台席项目记录'] || []).map((f, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="text-xs text-gray-700 truncate flex-1">{f.name}</span>
+                    {f.synced ? <span className="text-xs text-green-500">已同步</span> : <span className="text-xs text-yellow-500">未同步</span>}
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
         </div>
         <div className="p-4 border-t bg-white">
