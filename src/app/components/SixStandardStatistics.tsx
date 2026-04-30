@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronLeft, ArrowLeft, Loader2 } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
@@ -22,12 +22,12 @@ const citySixData = [
 ];
 
 const sixCategories = [
-  { key: '客情掌握', barClass: 'bg-blue-500', textClass: 'text-blue-600' },
-  { key: '方案总控', barClass: 'bg-green-500', textClass: 'text-green-600' },
-  { key: '谈判应标自主', barClass: 'bg-purple-500', textClass: 'text-purple-600' },
-  { key: '采购自主', barClass: 'bg-orange-500', textClass: 'text-orange-600' },
-  { key: '项目强管控', barClass: 'bg-red-500', textClass: 'text-red-600' },
-  { key: '运维自主', barClass: 'bg-cyan-500', textClass: 'text-cyan-600' },
+  { key: '客情掌握', color: '#3B82F6', bg: '#EFF6FF', text: '客情' },
+  { key: '方案总控', color: '#22C55E', bg: '#F0FDF4', text: '方案' },
+  { key: '谈判应标自主', color: '#A855F7', bg: '#FAF5FF', text: '谈判' },
+  { key: '采购自主', color: '#F97316', bg: '#FFF7ED', text: '采购' },
+  { key: '项目强管控', color: '#EF4444', bg: '#FEF2F2', text: '项目' },
+  { key: '运维自主', color: '#06B6D4', bg: '#ECFEFF', text: '运维' },
 ];
 
 // 各区县 Mock 数据
@@ -45,7 +45,6 @@ const districtData: Record<string, { name: string; rate: number }[]> = {
   '331100': [{ name: '莲都区', rate: 65.2 }, { name: '青田县', rate: 62.8 }, { name: '缙云县', rate: 59.4 }, { name: '遂昌县', rate: 56.1 }, { name: '松阳县', rate: 52.7 }, { name: '云和县', rate: 49.3 }, { name: '庆元县', rate: 45.8 }, { name: '景宁畲族自治县', rate: 42.4 }, { name: '龙泉市', rate: 48.6 }],
 };
 
-// 蓝色系配色
 function getBlueColor(rate: number): string {
   if (rate >= 90) return '#1565C0';
   if (rate >= 80) return '#1976D2';
@@ -57,48 +56,79 @@ function getBlueColor(rate: number): string {
   return '#BBDEFB';
 }
 
-// 计算地市整体完成率
 function calcCityRate(city: typeof citySixData[0]): number {
-  const rates = sixCategories.map((c) => city[c.key as keyof typeof city].rate);
+  const rates = sixCategories.map((c) => (city[c.key as keyof typeof city] as { count: number; rate: number }).rate);
   return rates.reduce((s, v) => s + v, 0) / sixCategories.length;
+}
+
+// ===== 环形进度组件 =====
+interface RingProps {
+  rate: number;
+  color: string;
+  bg: string;
+  label: string;
+  size?: number;
+}
+
+function RingChart({ rate, color, bg, label, size = 40 }: RingProps) {
+  const r = 16;
+  const cx = 20;
+  const cy = 20;
+  const circumference = 2 * Math.PI * r;
+  const dashoffset = circumference * (1 - rate / 100);
+
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <svg width={size} height={size} viewBox="0 0 40 40">
+        {/* 背景圆环 */}
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={bg} strokeWidth="4" />
+        {/* 进度圆环 */}
+        <circle
+          cx={cx} cy={cy} r={r}
+          fill="none"
+          stroke={color}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={dashoffset}
+          transform={`rotate(-90 ${cx} ${cy})`}
+          style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+        />
+        {/* 中心百分比 */}
+        <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle" fontSize="8" fontWeight="700" fill={color}>
+          {rate.toFixed(0)}%
+        </text>
+      </svg>
+      <span className="text-[9px] text-gray-500 leading-tight text-center">{label}</span>
+    </div>
+  );
 }
 
 type ViewLevel = 'province' | 'city';
 
 export function SixStandardStatistics() {
   const navigate = useNavigate();
-  const echartsRef = useRef<any>(null);
   const [viewLevel, setViewLevel] = useState<ViewLevel>('province');
   const [selectedCity, setSelectedCity] = useState<typeof citySixData[0] | null>(null);
   const [geoJson, setGeoJson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [districtGeoJson, setDistrictGeoJson] = useState<any>(null);
 
-  // 获取省级 GeoJSON
   useEffect(() => {
     const controller = new AbortController();
     fetch('https://geo.datav.aliyun.com/areas_v3/bound/330000_full.json', { signal: controller.signal })
       .then((res) => res.json())
-      .then((data) => {
-        echarts.registerMap('zhejiang', data);
-        setGeoJson(data);
-        setLoading(false);
-      })
+      .then((data) => { echarts.registerMap('zhejiang', data); setGeoJson(data); setLoading(false); })
       .catch((err) => { if (err.name !== 'AbortError') setLoading(false); });
     return () => controller.abort();
   }, []);
 
-  // 获取区县 GeoJSON
   const loadDistrictMap = useCallback((cityAdcode: string) => {
     const controller = new AbortController();
     setLoading(true);
     fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${cityAdcode}_full.json`, { signal: controller.signal })
       .then((res) => res.json())
-      .then((data) => {
-        echarts.registerMap(`city_${cityAdcode}`, data);
-        setDistrictGeoJson({ adcode: cityAdcode, data });
-        setLoading(false);
-      })
+      .then((data) => { echarts.registerMap(`city_${cityAdcode}`, data); setDistrictGeoJson({ adcode: cityAdcode, data }); setLoading(false); })
       .catch((err) => { if (err.name !== 'AbortError') setLoading(false); });
     return () => controller.abort();
   }, []);
@@ -106,51 +136,27 @@ export function SixStandardStatistics() {
   const handleCityClick = useCallback((params: any) => {
     const cityName = params.name?.replace(/市$/, '');
     const city = citySixData.find((c) => c.name.replace(/市$/, '') === cityName);
-    if (city) {
-      setSelectedCity(city);
-      setViewLevel('city');
-      loadDistrictMap(city.adcode);
-    }
+    if (city) { setSelectedCity(city); setViewLevel('city'); loadDistrictMap(city.adcode); }
   }, [loadDistrictMap]);
 
-  const handleBack = useCallback(() => {
-    setViewLevel('province');
-    setSelectedCity(null);
-  }, []);
+  const handleBack = useCallback(() => { setViewLevel('province'); setSelectedCity(null); }, []);
 
-  // ECharts 配置
   const getOption = (): EChartsOption => {
     if (viewLevel === 'province' && geoJson) {
-      const mapData = citySixData.map((city) => ({
-        name: city.name,
-        value: calcCityRate(city),
-      }));
-
+      const mapData = citySixData.map((city) => ({ name: city.name, value: calcCityRate(city) }));
       return {
         tooltip: { show: false },
         visualMap: {
-          type: 'continuous',
-          min: 30, max: 90,
-          show: false,
+          type: 'continuous', min: 30, max: 90, show: false,
           inRange: { color: ['#BBDEFB', '#90CAF9', '#64B5F6', '#42A5F5', '#2196F3', '#1E88E5', '#1976D2', '#1565C0'] },
         },
         series: [{
-          type: 'map',
-          map: 'zhejiang',
-          roam: true,
-          zoom: 1.1,
-          scaleLimit: { min: 0.8, max: 5 },
-          emphasis: {
-            itemStyle: { areaColor: '#0D47A1', shadowBlur: 15, shadowColor: 'rgba(13,71,161,0.5)' },
-            label: { show: false },
-          },
+          type: 'map', map: 'zhejiang', roam: true, zoom: 1.1, scaleLimit: { min: 0.8, max: 5 },
+          emphasis: { itemStyle: { areaColor: '#0D47A1', shadowBlur: 15, shadowColor: 'rgba(13,71,161,0.5)' }, label: { show: false } },
           select: { disabled: true },
           itemStyle: { areaColor: '#E3F2FD', borderColor: 'rgba(255,255,255,0.6)', borderWidth: 2 },
           label: {
-            show: true,
-            color: '#fff',
-            fontSize: 11,
-            fontWeight: 600,
+            show: true, color: '#fff', fontSize: 11, fontWeight: 600,
             formatter: (params: any) => {
               const city = citySixData.find((c) => c.name === params.name);
               if (!city) return `{name|${params.name}}`;
@@ -162,39 +168,25 @@ export function SixStandardStatistics() {
               rate: { fontSize: 11, fontWeight: 600, color: '#E3F2FD', lineHeight: 16 },
             },
           },
-          labelLine: { show: false },
           data: mapData,
         }],
       };
     } else if (viewLevel === 'city' && districtGeoJson) {
       const districts = districtData[districtGeoJson.adcode] || [];
       const mapData = districts.map((d) => ({ name: d.name, value: d.rate }));
-
       return {
         tooltip: { show: false },
         visualMap: {
-          type: 'continuous',
-          min: 30, max: 95,
-          show: false,
+          type: 'continuous', min: 30, max: 95, show: false,
           inRange: { color: ['#BBDEFB', '#90CAF9', '#64B5F6', '#42A5F5', '#2196F3', '#1E88E5', '#1976D2', '#1565C0'] },
         },
         series: [{
-          type: 'map',
-          map: `city_${districtGeoJson.adcode}`,
-          roam: true,
-          zoom: 1.2,
-          scaleLimit: { min: 0.8, max: 6 },
-          emphasis: {
-            itemStyle: { areaColor: '#0D47A1', shadowBlur: 15, shadowColor: 'rgba(13,71,161,0.5)' },
-            label: { show: false },
-          },
+          type: 'map', map: `city_${districtGeoJson.adcode}`, roam: true, zoom: 1.2, scaleLimit: { min: 0.8, max: 6 },
+          emphasis: { itemStyle: { areaColor: '#0D47A1', shadowBlur: 15, shadowColor: 'rgba(13,71,161,0.5)' }, label: { show: false } },
           select: { disabled: true },
           itemStyle: { areaColor: '#E3F2FD', borderColor: 'rgba(255,255,255,0.6)', borderWidth: 1.5 },
           label: {
-            show: true,
-            color: '#1565C0',
-            fontSize: 10,
-            fontWeight: 600,
+            show: true, color: '#1565C0', fontSize: 10, fontWeight: 600,
             formatter: (params: any) => {
               const d = districts.find((x) => x.name === params.name);
               if (!d) return `{name|${params.name}}`;
@@ -212,7 +204,6 @@ export function SixStandardStatistics() {
     return {};
   };
 
-  // 全省平均
   const provinceAvg = citySixData.reduce((s, c) => s + calcCityRate(c), 0) / citySixData.length;
 
   return (
@@ -225,104 +216,77 @@ export function SixStandardStatistics() {
             <span className="ml-3 text-gray-400 text-sm">地图加载中...</span>
           </div>
         ) : (
-          <ReactECharts
-            ref={echartsRef}
-            option={getOption()}
-            style={{ height: '100%', width: '100%' }}
-            onEvents={{ click: handleCityClick }}
-            opts={{ renderer: 'canvas' }}
-          />
+          <ReactECharts option={getOption()} style={{ height: '100%', width: '100%' }}
+            onEvents={{ click: handleCityClick }} opts={{ renderer: 'canvas' }} />
         )}
       </div>
 
-      {/* ===== 顶部 Header — 半透明毛玻璃 ===== */}
-      <div className="absolute top-0 left-0 right-0 z-20 bg-white/75 backdrop-blur-md border-b border-white/30">
+      {/* ===== 顶部 Header ===== */}
+      <div className="absolute top-0 left-0 right-0 z-20 bg-white border-b border-gray-200 shadow-sm">
         <div className="px-4 py-3 flex items-center gap-3">
           {viewLevel === 'city' ? (
-            <button onClick={handleBack} className="text-gray-700 hover:text-blue-600 transition-colors">
-              <ArrowLeft className="w-6 h-6" />
-            </button>
+            <button onClick={handleBack} className="text-gray-600 hover:text-blue-600"><ArrowLeft className="w-6 h-6" /></button>
           ) : (
-            <button onClick={() => navigate('/six-standard-list')} className="text-gray-700 hover:text-blue-600 transition-colors">
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+            <button onClick={() => navigate('/six-standard-list')} className="text-gray-600 hover:text-blue-600"><ChevronLeft className="w-6 h-6" /></button>
           )}
           <h1 className="text-lg font-semibold text-gray-900 flex-1">
             {viewLevel === 'city' ? `${selectedCity?.name.replace('市', '')}六到位统计` : '六到位统计'}
           </h1>
-          {/* 全省平均 */}
-          <div className="flex items-center gap-1.5 bg-blue-600 text-white rounded-full px-3 py-1">
+          <div className="bg-blue-600 text-white rounded-full px-3 py-1 flex items-center gap-1.5">
             <span className="text-xs opacity-80">全省</span>
             <span className="text-sm font-bold">{provinceAvg.toFixed(1)}%</span>
           </div>
         </div>
       </div>
 
-      {/* ===== 地市排名列表 ===== */}
+      {/* ===== 地市列表 ===== */}
       {viewLevel === 'province' && (
-        <div className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
-          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}>
+        <div
+          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
+          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)' }}
+        >
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...citySixData].sort((a, b) => calcCityRate(b) - calcCityRate(a)).map((city, i) => {
               const rate = calcCityRate(city);
               return (
                 <div
                   key={city.adcode}
-                  className="bg-white/95 rounded-xl px-3 py-3 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300 hover:shadow-md active:scale-[0.99] transition-all"
-                  onClick={() => {
-                    setSelectedCity(city);
-                    setViewLevel('city');
-                    loadDistrictMap(city.adcode);
-                  }}
+                  className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300 hover:shadow-md active:scale-[0.99] transition-all"
+                  onClick={() => { setSelectedCity(city); setViewLevel('city'); loadDistrictMap(city.adcode); }}
                 >
-                  {/* 排名 + 地市名 + 整体完成率 */}
+                  {/* 顶部：排名 + 地市名 + 整体完成率 */}
                   <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold flex-shrink-0 ${
+                    <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold flex-shrink-0 ${
                       i === 0 ? 'bg-yellow-400 text-yellow-900' :
                       i === 1 ? 'bg-gray-300 text-gray-700' :
                       i === 2 ? 'bg-orange-300 text-orange-900' :
                       'bg-blue-50 text-blue-500'
-                    }`}>
-                      {i + 1}
-                    </div>
+                    }`}>{i + 1}</div>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-semibold text-gray-900">{city.name}</div>
-                      <div className="text-[10px] text-gray-400">商机 {city.oppCount} · 已转化 {city.convertedCount}</div>
+                      <div className="text-[11px] text-gray-400">商机 {city.oppCount} · 已转化 {city.convertedCount}</div>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <div className="text-lg font-bold" style={{ color: getBlueColor(rate) }}>{rate.toFixed(1)}%</div>
-                      <div className="w-12 h-1 bg-gray-100 rounded-full mt-0.5 overflow-hidden">
-                        <div className="h-full rounded-full transition-all" style={{ width: `${rate}%`, backgroundColor: getBlueColor(rate) }} />
-                      </div>
+                      <div className="text-xl font-bold" style={{ color: getBlueColor(rate) }}>{rate.toFixed(1)}%</div>
+                      <div className="text-[10px] text-gray-400">整体完成率</div>
                     </div>
                   </div>
 
-                  {/* 六个到位小进度条 */}
-                  <div className="grid grid-cols-6 gap-1">
+                  {/* 六个到位环形图 */}
+                  <div className="flex items-center justify-between gap-1 overflow-hidden">
                     {sixCategories.map((cat) => {
                       const data = city[cat.key as keyof typeof city] as { count: number; rate: number };
                       return (
-                        <div key={cat.key} className="flex flex-col items-center gap-0.5">
-                          <div className="w-full flex flex-col items-center">
-                            <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                              <div
-                                className={`h-full rounded-full ${cat.barClass}`}
-                                style={{ width: `${Math.min(data.rate / 30, 1) * 100}%` }}
-                              />
-                            </div>
-                            <span className={`text-[9px] font-medium ${cat.textClass} mt-0.5`}>{data.rate.toFixed(0)}%</span>
-                          </div>
-                        </div>
+                        <RingChart
+                          key={cat.key}
+                          rate={data.rate}
+                          color={cat.color}
+                          bg={cat.bg}
+                          label={cat.text}
+                          size={42}
+                        />
                       );
                     })}
-                  </div>
-                  {/* 六个到位标签 */}
-                  <div className="grid grid-cols-6 gap-1 mt-0.5">
-                    {sixCategories.map((cat) => (
-                      <div key={cat.key} className="flex justify-center">
-                        <span className="text-[8px] text-gray-400 text-center leading-tight">{cat.key.replace('自主', '').replace('掌握', '').replace('方案', '').replace('谈判应标', '应标').replace('采购', '').replace('项目强管控', '项目')}</span>
-                      </div>
-                    ))}
                   </div>
                 </div>
               );
@@ -333,34 +297,32 @@ export function SixStandardStatistics() {
 
       {/* ===== 区县视图 ===== */}
       {viewLevel === 'city' && selectedCity && (
-        <div className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
-          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}>
-          <div className="px-3 pb-4 pt-2 space-y-2">
+        <div
+          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto"
+          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.7) 12%, white 100%)' }}
+        >
+          <div className="px-3 pb-4 pt-1 space-y-2">
             {[...districtData[selectedCity.adcode] || []].sort((a, b) => b.rate - a.rate).map((district, i) => (
-              <div key={i} className="bg-white/95 rounded-xl px-3 py-2.5 flex items-center gap-3 shadow-sm border border-gray-100">
-                <div className={`w-5 h-5 flex items-center justify-center rounded-full text-[10px] font-bold flex-shrink-0 ${
+              <div key={i} className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100 flex items-center gap-3">
+                <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold flex-shrink-0 ${
                   i === 0 ? 'bg-yellow-400 text-yellow-900' :
                   i === 1 ? 'bg-gray-300 text-gray-700' :
                   i === 2 ? 'bg-orange-300 text-orange-900' :
                   'bg-blue-50 text-blue-500'
-                }`}>
-                  {i + 1}
-                </div>
+                }`}>{i + 1}</div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-900">{district.name}</div>
+                  <div className="text-sm font-semibold text-gray-900">{district.name}</div>
+                  <div className="text-[11px] text-gray-400">商机 {selectedCity.oppCount} · 已转化 {selectedCity.convertedCount}</div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <div className="text-base font-bold" style={{ color: getBlueColor(district.rate) }}>{district.rate}%</div>
-                  <div className="w-12 h-1 bg-gray-100 rounded-full mt-0.5 overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${district.rate}%`, backgroundColor: getBlueColor(district.rate) }} />
-                  </div>
+                  <div className="text-xl font-bold" style={{ color: getBlueColor(district.rate) }}>{district.rate}%</div>
+                  <div className="text-[10px] text-gray-400">完成率</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
       )}
-
     </div>
   );
 }
