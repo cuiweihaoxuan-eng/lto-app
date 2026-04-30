@@ -298,24 +298,43 @@ export function SixStandardStatistics() {
       {/* ===== 区县视图 ===== */}
       {viewLevel === 'city' && selectedCity && (
         <div
-          className="absolute bottom-0 left-0 right-0 z-10 max-h-[55vh] overflow-y-auto bg-white rounded-t-2xl"
+          className="absolute left-0 right-0 z-10 top-[48vh] bottom-0 max-h-[52vh] overflow-y-auto bg-white/80 backdrop-blur-lg rounded-t-2xl"
+          style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)', maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.85) 15%, white 100%)' }}
         >
           <div className="px-3 pb-4 pt-1 space-y-2">
             {[...districtData[selectedCity.adcode] || []].sort((a, b) => b.rate - a.rate).map((district, i) => (
-              <div key={i} className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100 flex items-center gap-3">
-                <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold flex-shrink-0 ${
-                  i === 0 ? 'bg-yellow-400 text-yellow-900' :
-                  i === 1 ? 'bg-gray-300 text-gray-700' :
-                  i === 2 ? 'bg-orange-300 text-orange-900' :
-                  'bg-blue-50 text-blue-500'
-                }`}>{i + 1}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-gray-900">{district.name}</div>
-                  <div className="text-[11px] text-gray-400">商机 {selectedCity.oppCount} · 已转化 {selectedCity.convertedCount}</div>
+              <div key={i} className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold flex-shrink-0 ${
+                    i === 0 ? 'bg-yellow-400 text-yellow-900' :
+                    i === 1 ? 'bg-gray-300 text-gray-700' :
+                    i === 2 ? 'bg-orange-300 text-orange-900' :
+                    'bg-blue-50 text-blue-500'
+                  }`}>{i + 1}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-gray-900">{district.name}</div>
+                    <div className="text-[11px] text-gray-400">商机 {selectedCity.oppCount} · 已转化 {selectedCity.convertedCount}</div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-xl font-bold" style={{ color: getBlueColor(district.rate) }}>{district.rate}%</div>
+                    <div className="text-[10px] text-gray-400">完成率</div>
+                  </div>
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <div className="text-xl font-bold" style={{ color: getBlueColor(district.rate) }}>{district.rate}%</div>
-                  <div className="text-[10px] text-gray-400">完成率</div>
+                {/* 六个到位环形图 */}
+                <div className="flex items-center justify-between gap-1 overflow-hidden">
+                  {sixCategories.map((cat) => {
+                    const data = selectedCity[cat.key as keyof typeof selectedCity] as { count: number; rate: number };
+                    return (
+                      <RingChart
+                        key={cat.key}
+                        rate={data.rate}
+                        color={cat.color}
+                        bg={cat.bg}
+                        label={cat.text}
+                        size={36}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             ))}
