@@ -1856,7 +1856,7 @@ export function SixStandardDetail() {
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-10">
         <div className="px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate('/tasks')} className="text-gray-600 hover:text-gray-800">
+          <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-800">
             <ChevronLeft className="w-6 h-6" />
           </button>
           <h1 className="text-lg font-medium text-gray-900 flex-1">六到位详情</h1>
