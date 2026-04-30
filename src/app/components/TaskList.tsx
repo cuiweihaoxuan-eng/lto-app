@@ -8,6 +8,7 @@ interface Task {
   title: string;
   customerManager: string;
   salesManager: string;
+  auditor?: string;
   teamMembers: string[];
   branch: string;
   department: string;
@@ -21,6 +22,7 @@ const mockTasks: Task[] = [
     title: '弱电整体改造，摄像头全覆盖...',
     customerManager: '回陆',
     salesManager: '金钰琳',
+    auditor: '费佳',
     teamMembers: ['蒋小涵'],
     branch: '镇海城北综合汽车企业支局',
     department: '宁波赫海分公司',
@@ -32,6 +34,7 @@ const mockTasks: Task[] = [
     title: '火墙AI走访客户推荐火墙全面...',
     customerManager: '查林如',
     salesManager: '金钰琳',
+    auditor: '李明',
     teamMembers: [],
     branch: '镇海城北综合汽车企业支局',
     department: '宁波赫海分公司',
@@ -156,6 +159,14 @@ export function TaskList() {
                   售前经理：{task.salesManager}
                 </span>
               </div>
+              {task.auditor && (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-blue-400 rounded-sm flex-shrink-0"></div>
+                  <span className="text-gray-600 text-sm">
+                    审核人：{task.auditor}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Details */}
