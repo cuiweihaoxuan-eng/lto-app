@@ -222,22 +222,42 @@ export function SixStandardStatistics() {
       </div>
 
       {/* ===== 顶部 Header ===== */}
-      <div className="absolute top-0 left-0 right-0 z-20 bg-white border-b border-gray-200 shadow-sm">
+      <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="px-4 py-3 flex items-center gap-3">
-          {viewLevel === 'city' ? (
-            <button onClick={handleBack} className="text-gray-600 hover:text-blue-600"><ArrowLeft className="w-6 h-6" /></button>
-          ) : (
-            <button onClick={() => navigate('/six-standard-list')} className="text-gray-600 hover:text-blue-600"><ChevronLeft className="w-6 h-6" /></button>
-          )}
-          <h1 className="text-lg font-semibold text-gray-900 flex-1">
-            {viewLevel === 'city' ? `${selectedCity?.name.replace('市', '')}六到位统计` : '六到位统计'}
-          </h1>
-          <div className="bg-blue-600 text-white rounded-full px-3 py-1 flex items-center gap-1.5">
-            <span className="text-xs opacity-80">全省</span>
-            <span className="text-sm font-bold">{provinceAvg.toFixed(1)}%</span>
-          </div>
+          <button onClick={() => navigate('/six-standard-list')} className="text-gray-600 hover:text-blue-600">
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-lg font-semibold text-gray-900 flex-1">六到位</h1>
+        </div>
+        {/* Tabs */}
+        <div className="flex border-t">
+          <button
+            onClick={() => navigate('/six-standard-list')}
+            className="flex-1 py-2.5 text-sm font-medium transition-colors text-gray-500"
+          >
+            六到位清单
+          </button>
+          <button className="flex-1 py-2.5 text-sm font-medium transition-colors text-blue-600 border-b-2 border-blue-600">
+            六到位统计
+          </button>
         </div>
       </div>
+
+      {/* ===== 全省完成率悬浮徽章 ===== */}
+      <div className="absolute top-[80px] right-4 z-20 bg-blue-600 text-white rounded-full px-3 py-1.5 flex items-center gap-2 shadow-lg">
+        <span className="text-xs opacity-90">全省</span>
+        <span className="text-base font-bold leading-none">{provinceAvg.toFixed(1)}%</span>
+      </div>
+
+      {/* ===== 区县视图返回提示 ===== */}
+      {viewLevel === 'city' && (
+        <div className="absolute top-[80px] left-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-2 shadow-sm border border-gray-200">
+          <button onClick={handleBack} className="text-gray-600 hover:text-blue-600">
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+          <span className="text-xs font-medium text-gray-700">{selectedCity?.name.replace('市', '')} — 六到位统计</span>
+        </div>
+      )}
 
       {/* ===== 地市列表 ===== */}
       {viewLevel === 'province' && (
