@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, Search, Filter, X, ChevronUp, ChevronDown, CheckCircle, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { Sheet, SheetContent } from './ui/sheet';
 import { Button } from './ui/button';
 
@@ -398,6 +398,7 @@ function StatsTab() {
 
 export function SixStandardList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'list' | 'stats'>('list');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -411,16 +412,14 @@ export function SixStandardList() {
   const [filterCreateTimeEnd, setFilterCreateTimeEnd] = useState('');
   const [filterContractName, setFilterContractName] = useState('');
   const [filterProjectName, setFilterProjectName] = useState('');
+  // 筛选侧边栏：商机名称/编码、合同名称/编码、项目名称/编码
+  const [filterOppName, setFilterOppName] = useState('');
+  const [filterOppCode, setFilterOppCode] = useState('');
+  const [filterContractCode, setFilterContractCode] = useState('');
+  const [filterProjectCode, setFilterProjectCode] = useState('');
 
-  const handleSearch = () => {
-    console.log('搜索关键词:', searchKeyword);
-    setSearchOpen(false);
-  };
-
-  const handleReset = () => {
-    setSearchKeyword('');
-  };
-
+  
+  
   const handleToggleExpand = (id: string) => {
     setExpandedCards((prev) => ({
       ...prev,
@@ -486,7 +485,7 @@ export function SixStandardList() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="请输入商机名称、商机编码、客户名称"
+              placeholder="输入商机名称/编码、合同名称/编码、项目名称/编码"
               className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
@@ -494,13 +493,13 @@ export function SixStandardList() {
           </div>
           <div className="flex gap-2">
             <button
-              onClick={handleReset}
+              onClick={() => setSearchKeyword('')}
               className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
             >
               重置
             </button>
             <button
-              onClick={handleSearch}
+              onClick={() => setSearchOpen(false)}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
             >
               查询
@@ -592,6 +591,34 @@ export function SixStandardList() {
                 />
               </div>
 
+              {/* 商机名称 */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  商机名称
+                </label>
+                <input
+                  type="text"
+                  value={filterOppName}
+                  onChange={(e) => setFilterOppName(e.target.value)}
+                  placeholder="请输入"
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                />
+              </div>
+
+              {/* 商机编码 */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  商机编码
+                </label>
+                <input
+                  type="text"
+                  value={filterOppCode}
+                  onChange={(e) => setFilterOppCode(e.target.value)}
+                  placeholder="请输入"
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                />
+              </div>
+
               {/* 合同名称 */}
               <div>
                 <label className="text-sm font-medium text-gray-700 block mb-2">
@@ -601,7 +628,21 @@ export function SixStandardList() {
                   type="text"
                   value={filterContractName}
                   onChange={(e) => setFilterContractName(e.target.value)}
-                  placeholder="请输入合同名称"
+                  placeholder="请输入"
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                />
+              </div>
+
+              {/* 合同编码 */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  合同编码
+                </label>
+                <input
+                  type="text"
+                  value={filterContractCode}
+                  onChange={(e) => setFilterContractCode(e.target.value)}
+                  placeholder="请输入"
                   className="w-full px-3 py-2 border rounded-lg text-sm"
                 />
               </div>
@@ -615,7 +656,21 @@ export function SixStandardList() {
                   type="text"
                   value={filterProjectName}
                   onChange={(e) => setFilterProjectName(e.target.value)}
-                  placeholder="请输入项目名称"
+                  placeholder="请输入"
+                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                />
+              </div>
+
+              {/* 项目编码 */}
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  项目编码
+                </label>
+                <input
+                  type="text"
+                  value={filterProjectCode}
+                  onChange={(e) => setFilterProjectCode(e.target.value)}
+                  placeholder="请输入"
                   className="w-full px-3 py-2 border rounded-lg text-sm"
                 />
               </div>
@@ -652,8 +707,12 @@ export function SixStandardList() {
                     setFilterRegion('');
                     setFilterCreateTimeStart('');
                     setFilterCreateTimeEnd('');
+                    setFilterOppName('');
+                    setFilterOppCode('');
                     setFilterContractName('');
+                    setFilterContractCode('');
                     setFilterProjectName('');
+                    setFilterProjectCode('');
                   }}
                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
                 >
@@ -714,21 +773,32 @@ export function SixStandardList() {
               <div className="flex items-center gap-2 flex-wrap mt-3">
                 {criteriaLabels.map((key) => {
                   const { completed, total } = item.sixCriteria[key];
+                  const pct = total > 0 ? (completed / total) * 100 : 0;
                   const isDone = completed === total && total > 0;
                   const isNotReached = total === 0;
+                  const barColor = isDone ? '#22C55E' : isNotReached ? '#9CA3AF' : '#EF4444';
                   return (
-                    <span
-                      key={key}
-                      className={`px-2 py-0.5 text-xs rounded ${
-                        isDone
-                          ? 'bg-green-100 text-green-700'
-                          : isNotReached
-                          ? 'bg-gray-100 text-gray-400'
-                          : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {key} {completed}/{total}
-                    </span>
+                    <div key={key} className="relative px-2 py-0.5 rounded overflow-hidden" style={{ backgroundColor: '#F3F4F6' }}>
+                      <div
+                        className="absolute inset-0 rounded"
+                        style={{
+                          backgroundColor: barColor,
+                          width: `${pct}%`,
+                          opacity: isNotReached ? 0 : 0.25,
+                        }}
+                      />
+                      <span
+                        className={`relative text-xs rounded font-medium ${
+                          isDone
+                            ? 'text-green-700'
+                            : isNotReached
+                            ? 'text-gray-400'
+                            : 'text-red-600'
+                        }`}
+                      >
+                        {key} {completed}/{total}
+                      </span>
+                    </div>
                   );
                 })}
               </div>

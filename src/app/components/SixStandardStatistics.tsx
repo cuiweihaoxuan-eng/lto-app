@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronLeft, ArrowLeft, Loader2 } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Loader2, X } from 'lucide-react';
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts/core';
 import type { EChartsOption } from 'echarts';
@@ -22,12 +22,12 @@ const citySixData = [
 ];
 
 const sixCategories = [
-  { key: '客情掌握', color: '#3B82F6', bg: '#EFF6FF', text: '客情' },
-  { key: '方案总控', color: '#22C55E', bg: '#F0FDF4', text: '方案' },
-  { key: '谈判应标自主', color: '#A855F7', bg: '#FAF5FF', text: '谈判' },
-  { key: '采购自主', color: '#F97316', bg: '#FFF7ED', text: '采购' },
-  { key: '项目强管控', color: '#EF4444', bg: '#FEF2F2', text: '项目' },
-  { key: '运维自主', color: '#06B6D4', bg: '#ECFEFF', text: '运维' },
+  { key: '客情掌握', color: '#3B82F6', bg: '#EFF6FF', text: '客情', subs: ['客户档案', '拜访记录', '录入商机', '近三年信息化项目', '其他'] },
+  { key: '方案总控', color: '#22C55E', bg: '#F0FDF4', text: '方案', subs: ['组建团队', '方案设计与审核', '方案解构与中台把关', '其他'] },
+  { key: '谈判应标自主', color: '#A855F7', bg: '#FAF5FF', text: '谈判', subs: ['参标记录', '应标结果记录', '商务谈判', '前向合同信息', '其他'] },
+  { key: '采购自主', color: '#F97316', bg: '#FFF7ED', text: '采购', subs: ['标前决策会', '业务解构', '业务风险及合规审核', '后向资料', '其他'] },
+  { key: '项目强管控', color: '#EF4444', bg: '#FEF2F2', text: '项目', subs: ['项目实施总体设计', '变更记录', '验收报告', '项目实施文件', '审计清单', '其他'] },
+  { key: '运维自主', color: '#06B6D4', bg: '#ECFEFF', text: '运维', subs: ['数字资产平台', '第一服务界面', '售后其他资料', '其他'] },
 ];
 
 // 各区县 Mock 数据
@@ -67,10 +67,14 @@ interface RingProps {
   color: string;
   bg: string;
   label: string;
+  name?: string;
+  count?: number;
+  total?: number;
   size?: number;
+  onClick?: () => void;
 }
 
-function RingChart({ rate, color, bg, label, size = 40 }: RingProps) {
+function RingChart({ rate, color, bg, label, name, count, total, subItems, size = 40, onClick }: RingProps) {
   const r = 16;
   const cx = 20;
   const cy = 20;
@@ -79,26 +83,28 @@ function RingChart({ rate, color, bg, label, size = 40 }: RingProps) {
 
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <svg width={size} height={size} viewBox="0 0 40 40">
-        {/* 背景圆环 */}
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke={bg} strokeWidth="4" />
-        {/* 进度圆环 */}
-        <circle
-          cx={cx} cy={cy} r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={dashoffset}
-          transform={`rotate(-90 ${cx} ${cy})`}
-          style={{ transition: 'stroke-dashoffset 0.6s ease' }}
-        />
-        {/* 中心百分比 */}
-        <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle" fontSize="8" fontWeight="700" fill={color}>
-          {rate.toFixed(0)}%
-        </text>
-      </svg>
+      <div className="cursor-pointer" onClick={onClick}>
+        <svg width={size} height={size} viewBox="0 0 40 40">
+          {/* 背景圆环 */}
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke={bg} strokeWidth="4" />
+          {/* 进度圆环 */}
+          <circle
+            cx={cx} cy={cy} r={r}
+            fill="none"
+            stroke={color}
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={dashoffset}
+            transform={`rotate(-90 ${cx} ${cy})`}
+            style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+          />
+          {/* 中心百分比 */}
+          <text x={cx} y={cy + 1} textAnchor="middle" dominantBaseline="middle" fontSize="8" fontWeight="700" fill={color}>
+            {rate.toFixed(0)}%
+          </text>
+        </svg>
+      </div>
       <span className="text-[9px] text-gray-500 leading-tight text-center">{label}</span>
     </div>
   );
@@ -113,6 +119,7 @@ export function SixStandardStatistics() {
   const [geoJson, setGeoJson] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [districtGeoJson, setDistrictGeoJson] = useState<any>(null);
+  const [popupData, setPopupData] = useState<{ name: string; rate: number; count: number; total: number; x: number; y: number } | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -222,7 +229,7 @@ export function SixStandardStatistics() {
       </div>
 
       {/* ===== 顶部 Header ===== */}
-      <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="absolute top-0 left-0 right-0 z-20 bg-white/40 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate('/six-standard-list')} className="text-gray-600 hover:text-blue-600">
             <ChevronLeft className="w-6 h-6" />
@@ -243,15 +250,15 @@ export function SixStandardStatistics() {
         </div>
       </div>
 
-      {/* ===== 全省完成率悬浮徽章 ===== */}
-      <div className="absolute top-[80px] right-4 z-20 bg-blue-600 text-white rounded-full px-3 py-1.5 flex items-center gap-2 shadow-lg">
-        <span className="text-xs opacity-90">全省</span>
-        <span className="text-base font-bold leading-none">{provinceAvg.toFixed(1)}%</span>
+      {/* ===== 悬浮完成率徽章 ===== */}
+      <div className="absolute top-[110px] right-4 z-20 bg-blue-600 text-white rounded-full px-3 py-1.5 flex items-center gap-2 shadow-lg">
+        <span className="text-xs opacity-90">{viewLevel === 'city' ? selectedCity?.name.replace('市', '') : '全省'}</span>
+        <span className="text-base font-bold leading-none">{(viewLevel === 'city' && selectedCity ? calcCityRate(selectedCity) : provinceAvg).toFixed(1)}%</span>
       </div>
 
       {/* ===== 区县视图返回提示 ===== */}
       {viewLevel === 'city' && (
-        <div className="absolute top-[80px] left-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-2 shadow-sm border border-gray-200">
+        <div className="absolute top-[110px] left-4 z-20 bg-white/90 backdrop-blur-md rounded-full px-3 py-1.5 flex items-center gap-2 shadow-sm border border-gray-200">
           <button onClick={handleBack} className="text-gray-600 hover:text-blue-600">
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -271,8 +278,7 @@ export function SixStandardStatistics() {
               return (
                 <div
                   key={city.adcode}
-                  className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100 cursor-pointer hover:border-blue-300 hover:shadow-md active:scale-[0.99] transition-all"
-                  onClick={() => { setSelectedCity(city); setViewLevel('city'); loadDistrictMap(city.adcode); }}
+                  className="bg-white rounded-xl px-3 py-3 shadow-sm border border-gray-100"
                 >
                   {/* 顶部：排名 + 地市名 + 整体完成率 */}
                   <div className="flex items-center gap-2 mb-2">
@@ -282,9 +288,16 @@ export function SixStandardStatistics() {
                       i === 2 ? 'bg-orange-300 text-orange-900' :
                       'bg-blue-50 text-blue-500'
                     }`}>{i + 1}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-gray-900">{city.name}</div>
-                      <div className="text-[11px] text-gray-400">商机 {city.oppCount} · 已转化 {city.convertedCount}</div>
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <div
+                        className="text-sm font-semibold text-gray-900 cursor-pointer hover:text-blue-600"
+                        onClick={() => { setSelectedCity(city); setViewLevel('city'); loadDistrictMap(city.adcode); }}
+                      >{city.name}</div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); navigate(`/six-standard-list?city=${encodeURIComponent(city.name)}`); }}
+                        className="px-2 py-0.5 text-[10px] text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 flex-shrink-0"
+                      >查看明细</button>
+                      <div className="text-[11px] text-gray-400 ml-auto flex-shrink-0">商机 {city.oppCount} · 已转化 {city.convertedCount}</div>
                     </div>
                     <div className="text-right flex-shrink-0">
                       <div className="text-xl font-bold" style={{ color: getBlueColor(rate) }}>{rate.toFixed(1)}%</div>
@@ -303,7 +316,11 @@ export function SixStandardStatistics() {
                           color={cat.color}
                           bg={cat.bg}
                           label={cat.text}
+                          name={cat.key}
+                          count={data.count}
+                          total={Math.round(data.count / (data.rate / 100))}
                           size={36}
+                          onClick={(e: React.MouseEvent) => { e.stopPropagation(); const rect = (e.target as SVGElement).closest('div')?.getBoundingClientRect(); setPopupData({ name: cat.key, rate: data.rate, count: data.count, total: Math.round(data.count / (data.rate / 100)), x: rect ? rect.left + rect.width / 2 : 0, y: rect ? rect.top : 0 }); }}
                         />
                       );
                     })}
@@ -331,9 +348,12 @@ export function SixStandardStatistics() {
                     i === 2 ? 'bg-orange-300 text-orange-900' :
                     'bg-blue-50 text-blue-500'
                   }`}>{i + 1}</div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
                     <div className="text-sm font-semibold text-gray-900">{district.name}</div>
-                    <div className="text-[11px] text-gray-400">商机 {selectedCity.oppCount} · 已转化 {selectedCity.convertedCount}</div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); navigate(`/six-standard-list?city=${encodeURIComponent(selectedCity.name)}&district=${encodeURIComponent(district.name)}`); }}
+                      className="px-2 py-0.5 text-[10px] text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 flex-shrink-0"
+                    >查看明细</button>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="text-xl font-bold" style={{ color: getBlueColor(district.rate) }}>{district.rate}%</div>
@@ -344,6 +364,7 @@ export function SixStandardStatistics() {
                 <div className="flex items-center justify-between gap-1 overflow-hidden">
                   {sixCategories.map((cat) => {
                     const data = selectedCity[cat.key as keyof typeof selectedCity] as { count: number; rate: number };
+                    const total = Math.round(data.count / (data.rate / 100));
                     return (
                       <RingChart
                         key={cat.key}
@@ -351,7 +372,11 @@ export function SixStandardStatistics() {
                         color={cat.color}
                         bg={cat.bg}
                         label={cat.text}
+                        name={cat.key}
+                        count={data.count}
+                        total={total}
                         size={36}
+                        onClick={(e: React.MouseEvent) => { e.stopPropagation(); const rect = (e.target as SVGElement).closest('div')?.getBoundingClientRect(); setPopupData({ name: cat.key, rate: data.rate, count: data.count, total, x: rect ? rect.left + rect.width / 2 : 0, y: rect ? rect.top : 0 }); }}
                       />
                     );
                   })}
@@ -361,6 +386,48 @@ export function SixStandardStatistics() {
           </div>
         </div>
       )}
+
+      {/* ===== 环形图浮窗（tooltip样式，跟随点击位置） ===== */}
+      {popupData && (() => {
+        const cat = sixCategories.find((c) => c.key === popupData.name);
+        const subCount = cat ? cat.subs.length : 0;
+        const baseCount = Math.floor(popupData.count / subCount);
+        const remainder = popupData.count % subCount;
+        const POPUP_W = 160;
+        const left = Math.max(POPUP_W / 2, Math.min(popupData.x, window.innerWidth - POPUP_W / 2));
+        const top = popupData.y > window.innerHeight / 2 ? popupData.y - 10 : popupData.y + 50;
+        return (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setPopupData(null)} />
+            <div
+              className="fixed z-50 bg-white rounded-xl shadow-lg border border-gray-100 p-2"
+              style={{ top: top - 20, left, transform: 'translateX(-50%)', width: POPUP_W }}
+            >
+              <div className="text-center pb-1.5 border-b border-gray-100 mb-1.5">
+                <span className="text-xs font-semibold text-gray-800">{popupData.name}</span>
+              </div>
+              <div className="text-center mb-1.5">
+                <span className="text-lg font-bold" style={{ color: cat?.color }}>{popupData.rate.toFixed(1)}%</span>
+              </div>
+              <div className="space-y-1">
+                {cat?.subs.slice(0, 4).map((subName, idx) => {
+                  const completed = baseCount + (idx < remainder ? 1 : 0);
+                  const total = Math.ceil(popupData.total / subCount);
+                  return (
+                    <div key={subName} className="flex items-center gap-1.5">
+                      <span className="text-[10px] text-gray-600 w-14 truncate">{subName}</span>
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${total > 0 ? (completed / total) * 100 : 0}%`, backgroundColor: cat?.color }} />
+                      </div>
+                      <span className="text-[10px] text-gray-500 w-8 text-right">{completed}/{total}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }

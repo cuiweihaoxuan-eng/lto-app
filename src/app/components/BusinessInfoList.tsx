@@ -819,7 +819,7 @@ export function BusinessInfoList() {
                 {info.status === 'unprocessed' && (
                   <>
                     <button
-                      onClick={() => setLinkOpportunityOpen(true)}
+                      onClick={() => { setSelectedInfo(info); setLinkOpportunityOpen(true); }}
                       className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0"
                     >
                       关联商机
@@ -1140,7 +1140,7 @@ export function BusinessInfoList() {
       )}
 
       {/* Link Opportunity Dialog */}
-      {linkOpportunityOpen && selectedInfo && (
+      {linkOpportunityOpen && (
         <LinkOpportunityDialog
           open={linkOpportunityOpen}
           onClose={() => setLinkOpportunityOpen(false)}
