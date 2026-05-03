@@ -3,7 +3,7 @@ name: Sync & Deploy to GitHub Pages
 on:
   schedule:
     - cron: '0 * * * *'  # 每小时执行一次
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +28,7 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --prefer-offline
 
       - name: Build
         run: npm run build
