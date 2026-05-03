@@ -122,22 +122,18 @@ export function SixStandardStatistics() {
   const [popupData, setPopupData] = useState<{ name: string; rate: number; count: number; total: number; x: number; y: number } | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch('https://geo.datav.aliyun.com/areas_v3/bound/330000_full.json', { signal: controller.signal })
+    fetch('/lto-app/geo/zhejiang.json')
       .then((res) => res.json())
       .then((data) => { echarts.registerMap('zhejiang', data); setGeoJson(data); setLoading(false); })
-      .catch((err) => { if (err.name !== 'AbortError') setLoading(false); });
-    return () => controller.abort();
+      .catch(() => { fetch('https://geo.datav.aliyun.com/areas_v3/bound/330000_full.json').then((r) => r.json()).then((data) => { echarts.registerMap('zhejiang', data); setGeoJson(data); setLoading(false); }); });
   }, []);
 
   const loadDistrictMap = useCallback((cityAdcode: string) => {
-    const controller = new AbortController();
     setLoading(true);
-    fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${cityAdcode}_full.json`, { signal: controller.signal })
+    fetch(`/lto-app/geo/city_${cityAdcode}.json`)
       .then((res) => res.json())
       .then((data) => { echarts.registerMap(`city_${cityAdcode}`, data); setDistrictGeoJson({ adcode: cityAdcode, data }); setLoading(false); })
-      .catch((err) => { if (err.name !== 'AbortError') setLoading(false); });
-    return () => controller.abort();
+      .catch(() => { fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${cityAdcode}_full.json`).then((r) => r.json()).then((data) => { echarts.registerMap(`city_${cityAdcode}`, data); setDistrictGeoJson({ adcode: cityAdcode, data }); setLoading(false); }); });
   }, []);
 
   const handleCityClick = useCallback((params: any) => {
