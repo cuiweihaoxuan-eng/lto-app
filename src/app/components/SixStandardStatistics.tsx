@@ -161,9 +161,9 @@ export function SixStandardStatistics() {
           type: 'map', map: 'zhejiang', roam: true, zoom: 1.1, scaleLimit: { min: 0.8, max: 5 },
           emphasis: { itemStyle: { areaColor: '#0D47A1', shadowBlur: 15, shadowColor: 'rgba(13,71,161,0.5)' }, label: { show: false } },
           select: { disabled: true },
-          itemStyle: { areaColor: '#E3F2FD', borderColor: 'rgba(255,255,255,0.6)', borderWidth: 2 },
+          itemStyle: { areaColor: '#E3F2FD', borderColor: 'rgba(255,255,255,0.6)', borderWidth: 1.5 },
           label: {
-            show: true, color: '#fff', fontSize: 11, fontWeight: 600,
+            show: true, color: '#1565C0', fontSize: 10, fontWeight: 600,
             formatter: (params: any) => {
               const city = citySixData.find((c) => c.name === params.name);
               if (!city) return `{name|${params.name}}`;
@@ -171,8 +171,8 @@ export function SixStandardStatistics() {
               return `{name|${params.name.replace('市', '')}}\n{rate|${rate.toFixed(0)}%}`;
             },
             rich: {
-              name: { fontSize: 12, fontWeight: 700, color: '#fff', lineHeight: 18 },
-              rate: { fontSize: 11, fontWeight: 600, color: '#E3F2FD', lineHeight: 16 },
+              name: { fontSize: 11, fontWeight: 700, color: '#1565C0', lineHeight: 16 },
+              rate: { fontSize: 10, fontWeight: 600, color: '#1976D2', lineHeight: 14 },
             },
           },
           data: mapData,
