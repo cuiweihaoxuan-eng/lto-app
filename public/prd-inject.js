@@ -12,33 +12,10 @@
   const PRD_BASE = `http://localhost:${PRD_PORT}`;
 
   // ── 版本检查与自动更新 ───────────────────────────────
-  const SCRIPT_VERSION = '1.1.0'; // 与 skills/prd-inject.js 同步更新
+  const SCRIPT_VERSION = '1.1.2'; // 与 skills/prd-inject.js 同步更新
 
   async function checkAndUpdate() {
-    try {
-      const r = await fetch(PRD_BASE + '/api/prd/version');
-      if (!r.ok) return;
-      const { version } = await r.json();
-      if (version && version !== SCRIPT_VERSION) {
-        // 版本不同，尝试自动更新
-        const scriptR = await fetch(PRD_BASE + '/api/prd/script');
-        if (scriptR.ok) {
-          const scriptContent = await scriptR.text();
-          if (scriptContent && scriptContent.includes('__PRD_INJECTED__')) {
-            // 移除旧样式
-            document.getElementById('__prd-styles__')?.remove();
-            // 执行新脚本
-            eval(scriptContent);
-            // 重新创建按钮
-            createFloatBtn();
-            showToast('PRD 脚本已自动更新，请刷新或继续使用');
-            return;
-          }
-        }
-        // 自动更新失败，显示提示
-        showUpdateBanner(version);
-      }
-    } catch {}
+    // 版本检查失败不影响主功能，静默继续
   }
 
   function showUpdateBanner(remoteVersion) {
@@ -122,24 +99,39 @@
   }
 
   // ── 静态读取 PRD（无需服务）────────────────────────────
+  // 检测静态文件服务器地址（如果 HTML 通过 file:// 打开，需要使用 HTTP 服务器）
+  function getStaticBases() {
+    const loc = window.location;
+    // 如果是 file:// 协议（protocol 返回 "file:"），尝试常用端口
+    if (loc.protocol === 'file:' || loc.host === '') {
+      return ['http://localhost:8080', 'http://localhost:3000', 'http://localhost:5173', 'http://localhost:8000'];
+    }
+    // 如果是 http://，使用同源路径
+    return [loc.origin];
+  }
+
   async function loadPRDStatic(route) {
-    // 对路由进行 URL 编码，用于文件路径
     const encodedRoute = encodeURIComponent(route);
+    // 尝试的路径列表
     const mdPaths = [
-      `.prd/_routes/_${encodedRoute}.md`,
-      `.prd/_routes/_${route}.md`,
-      `public/prd/_routes/_${encodedRoute}.md`,
-      `public/prd/_routes/_${route}.md`,
-      `.prd/_routes/_index.md`,
-      `public/prd/_routes/_index.md`,
+      `/public/prd/_routes/_${encodedRoute}.md`,
+      `/public/prd/_routes/_${route}.md`,
+      `/public/prd/_routes/_index.md`,
     ];
-    for (const mdPath of mdPaths) {
-      try {
-        const r = await fetch(mdPath + '?t=' + Date.now(), { cache: 'no-store' });
-        if (r.ok) {
-          return { content: await r.text(), source: mdPath, mode: 'static' };
-        }
-      } catch {}
+
+    // 获取可能的服务器地址
+    const bases = getStaticBases();
+
+    for (const base of bases) {
+      for (const mdPath of mdPaths) {
+        const url = base + mdPath + '?t=' + Date.now();
+        try {
+          const r = await fetch(url, { cache: 'no-store' });
+          if (r.ok) {
+            return { content: await r.text(), source: mdPath, mode: 'static' };
+          }
+        } catch {}
+      }
     }
     return { content: '', source: null, mode: 'static' };
   }
@@ -169,15 +161,15 @@
     apiMode = false;
     staticMode = false;
 
-    // 优先尝试 API 模式
-    let result = await loadPRDApi(route);
+    // 优先尝试静态读取（无需服务）
+    let result = await loadPRDStatic(route);
     if (result.content) {
-      apiMode = true;
+      staticMode = true;
     } else {
-      // API 失败，降级到静态读取
-      result = await loadPRDStatic(route);
+      // 静态失败，尝试 API 模式
+      result = await loadPRDApi(route);
       if (result.content) {
-        staticMode = true;
+        apiMode = true;
       }
     }
 
