@@ -82,14 +82,16 @@ function prdPlugin() {
       return html.replace('</body>', `<script>window.__PRD_PORT__=${PRD_PORT};</script>\n<script src="/lto-app/prd-inject.js"></script>\n</body>`)
     },
     writeBundle(options) {
-      // 生产构建：将 PRD 静态模式注入到输出目录的 index.html
+      // 生产构建：确保 PRD 静态模式脚本注入到输出目录的 index.html
       const indexPath = path.join(options.dir, 'index.html')
       if (!fs.existsSync(indexPath)) return
       let html = fs.readFileSync(indexPath, 'utf-8')
-      if (html.includes('prd-inject.js')) return
-      html = html.replace('</body>', `<script src="/lto-app/prd-inject.js"></script>\n</body>`)
-      fs.writeFileSync(indexPath, html)
-      console.log('[PRD] ✅ prd-inject.js 已注入生产构建')
+      // prd-data.js 和 prd-inject.js 由 source 源码注入
+      if (!html.includes('prd-inject.js')) {
+        html = html.replace('</body>', `<script src="/lto-app/prd-inject.js"></script>\n</body>`)
+        fs.writeFileSync(indexPath, html)
+        console.log('[PRD] ✅ prd-inject.js 已注入生产构建')
+      }
     },
     closeBundle() {
       if (daemonProcess) {
