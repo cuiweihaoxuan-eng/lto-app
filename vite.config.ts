@@ -76,15 +76,20 @@ function prdPlugin() {
 
       console.log(`[PRD] 📋 打开: http://localhost:5173/lto-app/，左下角有 [PRD] 按钮`)
     },
-    transformIndexHtml(html, ctx) {
-      const base = (ctx.server.config.base || '/').replace(/\/$/, '') + '/'
-      if (!html.includes('__PRD_PORT__')) {
-        return html.replace('</body>', `<script>window.__PRD_PORT__=${PRD_PORT};</script>\n<script src="${base}prd-inject.js"></script>\n</body>`)
-      }
-      if (!html.includes('prd-inject.js')) {
-        return html.replace('<script src="/prd-inject.js"></script>', `<script src="${base}prd-inject.js"></script>`)
-      }
-      return html
+    transformIndexHtml(html) {
+      // 开发模式：注入 PRD 端口，触发 dev server 重启时会重新调用
+      if (html.includes('__PRD_PORT__') || html.includes('prd-inject.js')) return html
+      return html.replace('</body>', `<script>window.__PRD_PORT__=${PRD_PORT};</script>\n<script src="/lto-app/prd-inject.js"></script>\n</body>`)
+    },
+    writeBundle(options) {
+      // 生产构建：将 PRD 静态模式注入到输出目录的 index.html
+      const indexPath = path.join(options.dir, 'index.html')
+      if (!fs.existsSync(indexPath)) return
+      let html = fs.readFileSync(indexPath, 'utf-8')
+      if (html.includes('prd-inject.js')) return
+      html = html.replace('</body>', `<script src="/lto-app/prd-inject.js"></script>\n</body>`)
+      fs.writeFileSync(indexPath, html)
+      console.log('[PRD] ✅ prd-inject.js 已注入生产构建')
     },
     closeBundle() {
       if (daemonProcess) {
