@@ -78,9 +78,9 @@ function prdPlugin() {
     },
     transformIndexHtml(html) {
       // 注入 PRD 端口 + prd-data.js + prd-inject.js
-      // 注意：dev server 会自动加 base 前缀，所以路径不加 /lto-app/
+      // Vite dev server 会自动为 public/ 文件加 base 前缀，但这里手动加保证正确
       if (html.includes('prd-inject.js')) return html
-      return html.replace('</body>', `<script>window.__PRD_PORT__=${PRD_PORT};</script>\n<script src="/prd-data.js"></script>\n<script src="/prd-inject.js"></script>\n</body>`)
+      return html.replace('</body>', `<script>window.__PRD_PORT__=${PRD_PORT};</script>\n<script src="/lto-app/prd-data.js"></script>\n<script src="/lto-app/prd-inject.js"></script>\n</body>`)
     },
     writeBundle(options) {
       // 生产构建：注入 prd-data.js + prd-inject.js（静态模式，无需 PRD 端口）
