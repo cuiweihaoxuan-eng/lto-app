@@ -11,6 +11,9 @@ import { VisitRecordForm } from './components/VisitRecordForm';
 import { BusinessInfoList } from './components/BusinessInfoList';
 import { OpportunityList } from './components/OpportunityList';
 import { ExpertTaskPool } from './components/ExpertTaskPool';
+import { RevenueManagementList } from './components/RevenueManagementList';
+import { RevenueApplyForm } from './components/RevenueApplyForm';
+import { RevenueApplyView } from './components/RevenueApplyView';
 
 export const router = createBrowserRouter(
   [
@@ -61,6 +64,18 @@ export const router = createBrowserRouter(
     {
       path: '/expert-task-pool',
       Component: ExpertTaskPool,
+    },
+    {
+      path: '/revenue-management',
+      Component: RevenueManagementList,
+    },
+    {
+      path: '/revenue-apply',
+      Component: RevenueApplyForm,
+    },
+    {
+      path: '/revenue-view/:id',
+      Component: RevenueApplyView,
     },
   ],
   {

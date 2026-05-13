@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { FileText, ClipboardList, TrendingUp, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users } from 'lucide-react';
+import { FileText, ClipboardList, TrendingUp, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users, DollarSign } from 'lucide-react';
 
 export function Home() {
   const navigate = useNavigate();
@@ -64,6 +64,12 @@ export function Home() {
       icon: Bell,
       label: '消息通知列表',
       path: '/notifications',
+    },
+    {
+      id: 'revenue-management',
+      icon: DollarSign,
+      label: '录收管理',
+      path: '/revenue-management',
     },
     {
       id: 'business-info',

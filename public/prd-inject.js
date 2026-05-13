@@ -12,7 +12,7 @@
   const PRD_BASE = `http://localhost:${PRD_PORT}`;
 
   // ── 版本检查与自动更新 ───────────────────────────────
-  const SCRIPT_VERSION = '1.1.0'; // 与 skills/prd-inject.js 同步更新
+  const SCRIPT_VERSION = '1.4.0'; // 与 skills/prd-inject.js 同步更新
 
   async function checkAndUpdate() {
     try {
@@ -107,15 +107,16 @@
   function getCurrentRoute() {
     const meta = document.querySelector('meta[name="prd-route"]');
     if (meta) return meta.content;
+    // 兼容 LTO SPA：App.tsx 注入的路由名
+    if (window.__PRD_ROUTE__) return window.__PRD_ROUTE__;
     const parts = window.location.pathname.split('/').filter(Boolean);
-    for (let i = parts.length - 1; i >= 0; i--) {
+    // 跳过 base 路径
+    const skipSet = new Set(['lto', 'lto-app']);
+    let startIdx = 0;
+    if (parts.length > 0 && skipSet.has(parts[0])) startIdx = 1;
+    for (let i = parts.length - 1; i >= startIdx; i--) {
       if (!/^\d+$/.test(parts[i])) {
-        // 解码 URL 编码的路由（如中文路径）
-        try {
-          return decodeURIComponent(parts[i]);
-        } catch {
-          return parts[i];
-        }
+        try { return decodeURIComponent(parts[i]); } catch { return parts[i]; }
       }
     }
     return parts[parts.length - 1] || 'index';
@@ -137,13 +138,16 @@
 
     // 对路由进行 URL 编码，用于文件路径
     const encodedRoute = encodeURIComponent(route);
+    // 自动检测 base 路径（GitHub Pages /lto/ 或本地 /）
+    const base = window.__PRD_BASE__ || '';
     const mdPaths = [
-      `.prd/_routes/_${encodedRoute}.md`,
-      `.prd/_routes/_${route}.md`,
-      `public/prd/_routes/_${encodedRoute}.md`,
-      `public/prd/_routes/_${route}.md`,
-      `.prd/_routes/_index.md`,
-      `public/prd/_routes/_index.md`,
+      `${base}prd/_routes/_${encodedRoute}.md`,
+      `${base}prd/_routes/_${route}.md`,
+      `${base}public/prd/_routes/_${encodedRoute}.md`,
+      `${base}public/prd/_routes/_${route}.md`,
+      `${base}.prd/_routes/_${encodedRoute}.md`,
+      `${base}.prd/_routes/_${route}.md`,
+      `${base}prd/_routes/_index.md`,
     ];
     for (const mdPath of mdPaths) {
       try {
@@ -667,6 +671,8 @@
           '</div>',
         '</div>',
         '<div class="__prd-actions__">',
+          `<button class="__prd-btn__ __prd-btn-sec__" id="__prd_download_btn__" title="下载当前 Markdown">下载</button>`,
+          `<button class="__prd-btn__ __prd-btn-sec__" id="__prd_download_all_btn__" title="导出全部 PRD 为 zip">导出全部</button>`,
           `<button class="__prd-btn__ __prd-btn-pri__" id="__prd_edit_btn__" ${editBtnDisabled ? 'disabled title="需启动 PRD 服务"' : ''}>${editBtnLabel}</button>`,
           '<button class="__prd-btn__ __prd-btn-close__" id="__prd_close_btn__">✕</button>',
         '</div>',
@@ -679,6 +685,7 @@
       '</div>',
     ].join('');
 
+    document.getElementById('__prd_download_btn__').onclick = downloadPRD;
     document.getElementById('__prd_edit_btn__').onclick = () => { if (apiMode) renderEdit(route); };
     document.getElementById('__prd_close_btn__').onclick = togglePanel;
     renderMermaid();
@@ -759,7 +766,75 @@
     }
   }
 
-  // ── SPA 路由切换监听 ───────────────────────────────────
+  // ── 下载 Markdown 文件 ─────────────────────────────────
+  function downloadPRD() {
+    if (!currentMarkdown) return;
+    const blob = new Blob([currentMarkdown], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (currentRoute || 'prd') + '.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // ── 批量下载全部 PRD（zip）────────────────────────────
+  async function downloadAllPRDs() {
+    if (!window.__PRD_DATA__) {
+      alert('无可用 PRD 数据，请确保 prd-data.js 已加载');
+      return;
+    }
+    const data = window.__PRD_DATA__;
+    const routes = Object.keys(data).filter(k => !k.startsWith('_'));
+    if (routes.length === 0) {
+      alert('没有可下载的 PRD 文件');
+      return;
+    }
+    try {
+      // 动态加载 JSZip（首次使用）
+      if (!window.JSZip) {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js';
+        document.head.appendChild(s);
+        await new Promise((res, rej) => { s.onload = res; s.onerror = rej; });
+      }
+      const zip = new JSZip();
+      const folder = zip.folder('prd');
+      for (const route of routes) {
+        const content = data[route] || '';
+        // 文件名：route名.md，避免特殊字符
+        const safeName = route.replace(/[/\\:*?"<>|]/g, '_');
+        folder.file(`${safeName}.md`, content);
+      }
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'prd-all.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      // JSZip 加载失败时，降级为拼接文本文件
+      let content = `# PRD 全部文档\n\n导出时间: ${new Date().toLocaleString()}\n\n`;
+      for (const route of routes) {
+        content += `\n${'='.repeat(60)}\n路由: ${route}\n${'='.repeat(60)}\n\n`;
+        content += (data[route] || '') + '\n\n';
+      }
+      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'prd-all.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+  }
   let lastPath = location.pathname;
   setInterval(() => {
     if (location.pathname !== lastPath) {
