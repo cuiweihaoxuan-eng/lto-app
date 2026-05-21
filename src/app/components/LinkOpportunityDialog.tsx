@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X, Search, ChevronDown, AlertTriangle } from 'lucide-react';
+import { Input } from './ui/input';
+import { Checkbox } from './ui/checkbox';
 
 interface Opportunity {
   id: string;
@@ -144,41 +146,35 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
         {/* Search Box */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="请输入商机名称、商机编码"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
-          />
+          <Input type="text" placeholder="请输入商机名称、商机编码" value={searchText} onChange={(e) => setSearchText(e.target.value)} className="w-full pl-10" />
         </div>
 
         {/* Filter Buttons */}
         <div className="flex gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveFilter('customer')}
-            className="px-3 py-1.5 text-sm border rounded-lg whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border rounded-xl whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50 rounded-xl"
           >
             客户{selectedCustomer && ': ' + selectedCustomer}
             <ChevronDown className="w-3 h-3" />
           </button>
           <button
             onClick={() => setActiveFilter('time')}
-            className="px-3 py-1.5 text-sm border rounded-lg whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border rounded-xl whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50 rounded-xl"
           >
             时间
             <ChevronDown className="w-3 h-3" />
           </button>
           <button
             onClick={() => setActiveFilter('linkStatus')}
-            className="px-3 py-1.5 text-sm border rounded-lg whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border rounded-xl whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50 rounded-xl"
           >
             关联状态{selectedLinkStatus && ': ' + selectedLinkStatus}
             <ChevronDown className="w-3 h-3" />
           </button>
           <button
             onClick={() => setActiveFilter('manager')}
-            className="px-3 py-1.5 text-sm border rounded-lg whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50"
+            className="px-3 py-1.5 text-sm border rounded-xl whitespace-nowrap flex items-center gap-1 bg-white hover:bg-gray-50 rounded-xl"
           >
             客户经理{selectedManager && ': ' + selectedManager}
             <ChevronDown className="w-3 h-3" />
@@ -270,14 +266,14 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
       <div className="bg-white border-t p-4 flex gap-2">
         <button
           onClick={onClose}
-          className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+          className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"
         >
           取消
         </button>
         <button
           onClick={handleConfirmClick}
           disabled={!selectedOpp}
-          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           确定
         </button>
@@ -302,25 +298,23 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
                 </ol>
               </div>
               <label className="flex items-center gap-2 text-sm text-gray-700 mb-4">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={reminderChecked}
-                  onChange={(e) => setReminderChecked(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 rounded"
+                  onCheckedChange={(checked) => setReminderChecked(!!checked)}
                 />
                 我已知悉上述提醒
               </label>
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowConfirmDialog(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"
                 >
                   取消
                 </button>
                 <button
                   onClick={handleConfirm}
                   disabled={!reminderChecked}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   确认关联
                 </button>
@@ -341,13 +335,7 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
               </button>
             </div>
             <div className="p-4">
-              <input
-                type="text"
-                placeholder="搜索客户"
-                value={customerSearch}
-                onChange={(e) => setCustomerSearch(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm mb-3"
-              />
+              <Input type="text" placeholder="搜索客户" value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} className="w-full mb-3" />
               <div className="space-y-2 max-h-[40vh] overflow-y-auto">
                 {filteredCustomers.map((customer) => (
                   <div
@@ -356,7 +344,7 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
                       setSelectedCustomer(customer);
                       setActiveFilter(null);
                     }}
-                    className={`p-3 rounded-lg cursor-pointer ${
+                    className={`p-3 rounded-xl cursor-pointer ${
                       selectedCustomer === customer ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
                     }`}
                   >
@@ -380,24 +368,24 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
             </div>
             <div className="p-4">
               <div className="space-y-2">
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 border rounded-xl">
                   <label className="text-sm text-gray-600">开始时间</label>
-                  <input type="date" className="w-full mt-1 px-2 py-1 border rounded" />
+                  <Input type="date" className="w-full mt-1" />
                 </div>
-                <div className="p-3 border rounded-lg">
+                <div className="p-3 border rounded-xl">
                   <label className="text-sm text-gray-600">结束时间</label>
-                  <input type="date" className="w-full mt-1 px-2 py-1 border rounded" />
+                  <Input type="date" className="w-full mt-1" />
                 </div>
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => setActiveFilter(null)}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg"
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl"
                   >
                     取消
                   </button>
                   <button
                     onClick={() => setActiveFilter(null)}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl"
                   >
                     确定
                   </button>
@@ -425,7 +413,7 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
                     setSelectedLinkStatus(status);
                     setActiveFilter(null);
                   }}
-                  className={`p-3 rounded-lg cursor-pointer ${
+                  className={`p-3 rounded-xl cursor-pointer ${
                     selectedLinkStatus === status ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
                   }`}
                 >
@@ -447,13 +435,7 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
               </button>
             </div>
             <div className="p-4">
-              <input
-                type="text"
-                placeholder="搜索客户经理"
-                value={managerSearch}
-                onChange={(e) => setManagerSearch(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm mb-3"
-              />
+              <Input type="text" placeholder="搜索客户经理" value={managerSearch} onChange={(e) => setManagerSearch(e.target.value)} className="w-full mb-3" />
               <div className="space-y-2 max-h-[40vh] overflow-y-auto">
                 {filteredManagers.map((manager) => (
                   <div
@@ -462,7 +444,7 @@ export function LinkOpportunityDialog({ open, onClose, businessInfo }: LinkOppor
                       setSelectedManager(manager);
                       setActiveFilter(null);
                     }}
-                    className={`p-3 rounded-lg cursor-pointer ${
+                    className={`p-3 rounded-xl cursor-pointer ${
                       selectedManager === manager ? 'bg-blue-50 text-blue-600' : 'hover:bg-gray-50'
                     }`}
                   >

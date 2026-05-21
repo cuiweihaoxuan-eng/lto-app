@@ -3,6 +3,10 @@ import { ChevronLeft, Search, Filter, Eye, Star, StarOff, FileText, Clock, User,
 import { useNavigate } from 'react-router';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import { LinkOpportunityDialog } from './LinkOpportunityDialog';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Checkbox } from './ui/checkbox';
+import { Textarea } from './ui/textarea';
 
 interface BusinessInfo {
   id: string;
@@ -265,25 +269,20 @@ export function BusinessInfoList() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-20">
-        <div className="px-4 py-4 flex items-center gap-3">
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
             className="text-gray-600 hover:text-gray-800"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900 flex-1">商情管理</h1>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">商情管理</h1>
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="text-gray-600 hover:text-gray-800"
+            className={`p-2 rounded-xl transition-colors ${searchOpen ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
           >
             <Search className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <Filter className="w-5 h-5" />
           </button>
         </div>
 
@@ -296,24 +295,20 @@ export function BusinessInfoList() {
                 setActiveFirstTab(tab.key);
                 setActiveSecondTab(getSecondTabs()[0].key);
               }}
-              className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                activeFirstTab === tab.key
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600'
+              className={`relative flex-1 py-3 text-sm font-medium transition-colors ${
+                activeFirstTab === tab.key ? 'text-blue-600' : 'text-gray-600'
               }`}
             >
-              {tab.label}
-              <span
-                className={`ml-1 ${activeFirstTab === tab.key ? 'text-blue-600' : 'text-gray-400'}`}
-              >
-                ({tab.count})
-              </span>
+              <span className="relative z-10">{tab.label} ({tab.count})</span>
+              {activeFirstTab === tab.key && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-blue-500 rounded-full" />
+              )}
             </button>
           ))}
         </div>
 
         {/* Second Level Tabs */}
-        <div className="flex gap-2 px-4 py-2 overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 px-4 py-2 overflow-x-auto">
           {getSecondTabs().map((tab) => (
             <button
               key={tab.key}
@@ -328,37 +323,39 @@ export function BusinessInfoList() {
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Search Panel */}
-      {searchOpen && (
-        <div className="bg-white border-b p-4 space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="请输入商情编号、项目名称、项目编码、招标单位"
-              className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
+        {/* 搜索框 */}
+        {searchOpen && (
+          <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="请输入商情编号、项目名称、项目编码、招标单位"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                className="pl-10 pr-10"
+              />
+              {searchKeyword && (
+                <button
+                  onClick={() => setSearchKeyword('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+            </div>
             <button
-              onClick={handleReset}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+              onClick={() => setFilterOpen(!filterOpen)}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm transition-colors flex-shrink-0 ${
+                filterOpen ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+              }`}
             >
-              重置
-            </button>
-            <button
-              onClick={handleSearch}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-            >
-              查询
+              <Filter className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Filter Sidebar */}
       {filterOpen && (
@@ -372,7 +369,7 @@ export function BusinessInfoList() {
           {/* Sidebar */}
           <div className="fixed right-0 top-0 bottom-0 w-80 bg-white z-50 flex flex-col shadow-xl">
             {/* Header */}
-            <div className="px-4 py-4 border-b flex items-center justify-between">
+            <div className="px-6 py-4 border-b flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-900">筛选条件</h2>
               <button
                 onClick={() => setFilterOpen(false)}
@@ -383,29 +380,29 @@ export function BusinessInfoList() {
             </div>
 
             {/* Filter Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               {/* 行业类型 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   行业类型
                 </label>
-                <select
-                  value={filterIndustryType}
-                  onChange={(e) => setFilterIndustryType(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="政府">政府</option>
-                  <option value="医疗">医疗</option>
-                  <option value="教育">教育</option>
-                  <option value="企业">企业</option>
-                  <option value="其他">其他</option>
-                </select>
+                <Select value={filterIndustryType} onValueChange={setFilterIndustryType}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="政府">政府</SelectItem>
+                    <SelectItem value="医疗">医疗</SelectItem>
+                    <SelectItem value="教育">教育</SelectItem>
+                    <SelectItem value="企业">企业</SelectItem>
+                    <SelectItem value="其他">其他</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 商情状态 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商情状态
                 </label>
                 <div className="space-y-2">
@@ -416,19 +413,17 @@ export function BusinessInfoList() {
                     { value: 'returned', label: '已退回' },
                   ].map((status) => (
                     <label key={status.value} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={filterStatus.includes(status.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
+                        onCheckedChange={(checked) => {
+                          if (checked) {
                             setFilterStatus([...filterStatus, status.value]);
                           } else {
                             setFilterStatus(filterStatus.filter((s) => s !== status.value));
                           }
                         }}
-                        className="rounded"
                       />
-                      <span className="text-sm text-gray-700">{status.label}</span>
+                      <span className="text-sm text-gray-600">{status.label}</span>
                     </label>
                   ))}
                 </div>
@@ -436,175 +431,175 @@ export function BusinessInfoList() {
 
               {/* 管控部门 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   管控部门
                 </label>
-                <select
-                  value={filterDept}
-                  onChange={(e) => setFilterDept(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="政企部">政企部</option>
-                  <option value="行业部">行业部</option>
-                  <option value="集团部">集团部</option>
-                </select>
+                <Select value={filterDept} onValueChange={setFilterDept}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="政企部">政企部</SelectItem>
+                    <SelectItem value="行业部">行业部</SelectItem>
+                    <SelectItem value="集团部">集团部</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 商情区域 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商情区域
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
                   placeholder="请输入区域"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 数据类型 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   数据类型
                 </label>
-                <select
-                  value={filterDataType}
-                  onChange={(e) => setFilterDataType(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="招标">招标</option>
-                  <option value="中标">中标</option>
-                </select>
+                <Select value={filterDataType} onValueChange={setFilterDataType}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="招标">招标</SelectItem>
+                    <SelectItem value="中标">中标</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 运营商标签 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   运营商标签
                 </label>
-                <select
-                  value={filterOperatorTag}
-                  onChange={(e) => setFilterOperatorTag(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="电信">电信</option>
-                  <option value="移动">移动</option>
-                  <option value="联通">联通</option>
-                </select>
+                <Select value={filterOperatorTag} onValueChange={setFilterOperatorTag}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="电信">电信</SelectItem>
+                    <SelectItem value="移动">移动</SelectItem>
+                    <SelectItem value="联通">联通</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 集团派发时间 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   集团派发时间
                 </label>
                 <div className="space-y-2">
-                  <input
+                  <Input
                     type="date"
                     value={filterDistributeTimeStart}
                     onChange={(e) => setFilterDistributeTimeStart(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
-                  <div className="text-center text-xs text-gray-500">至</div>
-                  <input
+                  <div className="text-center text-xs text-gray-400">至</div>
+                  <Input
                     type="date"
                     value={filterDistributeTimeEnd}
                     onChange={(e) => setFilterDistributeTimeEnd(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                 </div>
               </div>
 
               {/* 招标/中标金额 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   招标/中标金额（万元）
                 </label>
                 <div className="flex items-center gap-2">
-                  <input
+                  <Input
                     type="number"
                     value={filterAmountMin}
                     onChange={(e) => setFilterAmountMin(e.target.value)}
                     placeholder="最小金额"
-                    className="flex-1 px-3 py-2 border rounded-lg text-sm"
+                    className="flex-1"
                   />
                   <span className="text-gray-500">-</span>
-                  <input
+                  <Input
                     type="number"
                     value={filterAmountMax}
                     onChange={(e) => setFilterAmountMax(e.target.value)}
                     placeholder="最大金额"
-                    className="flex-1 px-3 py-2 border rounded-lg text-sm"
+                    className="flex-1"
                   />
                 </div>
               </div>
 
               {/* 招标发布时间 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   招标发布时间
                 </label>
                 <div className="space-y-2">
-                  <input
+                  <Input
                     type="date"
                     value={filterBidPublishTimeStart}
                     onChange={(e) => setFilterBidPublishTimeStart(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                   <div className="text-center text-xs text-gray-500">至</div>
-                  <input
+                  <Input
                     type="date"
                     value={filterBidPublishTimeEnd}
                     onChange={(e) => setFilterBidPublishTimeEnd(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                 </div>
               </div>
 
               {/* 中标时间 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   中标时间
                 </label>
                 <div className="space-y-2">
-                  <input
+                  <Input
                     type="date"
                     value={filterBidWinTimeStart}
                     onChange={(e) => setFilterBidWinTimeStart(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                   <div className="text-center text-xs text-gray-500">至</div>
-                  <input
+                  <Input
                     type="date"
                     value={filterBidWinTimeEnd}
                     onChange={(e) => setFilterBidWinTimeEnd(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                 </div>
               </div>
 
               {/* 当前操作步骤 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   当前操作步骤
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterCurrentStep}
                   onChange={(e) => setFilterCurrentStep(e.target.value)}
                   placeholder="请输入操作步骤"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 当前操作角色 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   当前操作角色
                 </label>
                 <div className="space-y-2">
@@ -615,19 +610,17 @@ export function BusinessInfoList() {
                     { value: '客户经理', label: '客户经理' },
                   ].map((role) => (
                     <label key={role.value} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={filterCurrentRole.includes(role.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
+                        onCheckedChange={(checked) => {
+                          if (checked) {
                             setFilterCurrentRole([...filterCurrentRole, role.value]);
                           } else {
                             setFilterCurrentRole(filterCurrentRole.filter((r) => r !== role.value));
                           }
                         }}
-                        className="rounded"
                       />
-                      <span className="text-sm text-gray-700">{role.label}</span>
+                      <span className="text-sm text-gray-600">{role.label}</span>
                     </label>
                   ))}
                 </div>
@@ -635,7 +628,7 @@ export function BusinessInfoList() {
             </div>
 
             {/* Footer Actions */}
-            <div className="p-4 border-t bg-white">
+            <div className="p-6 border-t bg-white">
               <div className="flex gap-2">
                 <button
                   onClick={() => {
@@ -656,7 +649,7 @@ export function BusinessInfoList() {
                     setFilterCurrentStep('');
                     setFilterCurrentRole([]);
                   }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+                  className="px-4 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-xl text-sm"
                 >
                   重置
                 </button>
@@ -666,7 +659,7 @@ export function BusinessInfoList() {
                     alert('筛选条件已应用');
                     setFilterOpen(false);
                   }}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                  className="flex-1 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm"
                 >
                   确定
                 </button>
@@ -681,7 +674,7 @@ export function BusinessInfoList() {
         {businessInfos.map((info) => (
           <div
             key={info.id}
-            className="bg-white rounded-lg shadow-sm overflow-hidden"
+            className="bg-white rounded-xl shadow-sm overflow-hidden"
           >
             {/* Header with Title and Status */}
             <div className="p-4 border-b">
@@ -820,27 +813,27 @@ export function BusinessInfoList() {
                   <>
                     <button
                       onClick={() => { setSelectedInfo(info); setLinkOpportunityOpen(true); }}
-                      className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0"
+                      className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                     >
                       关联商机
                     </button>
                     <button
-                      className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0"
+                      className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                     >
                       创建商机
                     </button>
                     <button
-                      className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap flex-shrink-0"
+                      className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                     >
                       回退集团
                     </button>
                     <button
-                      className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap flex-shrink-0"
+                      className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                     >
                       取回
                     </button>
                     <button
-                      className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap flex-shrink-0"
+                      className="px-3 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                     >
                       回退驳回
                     </button>
@@ -848,7 +841,7 @@ export function BusinessInfoList() {
                 )}
                 <button
                   onClick={() => handleViewDetail(info)}
-                  className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0"
+                  className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
                 >
                   详情
                 </button>
@@ -903,7 +896,7 @@ export function BusinessInfoList() {
             {detailTab === 'info' ? (
               <div className="p-4 space-y-4">
                 {/* Basic Info Section */}
-                <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="bg-white rounded-xl shadow-sm p-4">
                   <h3 className="text-sm font-medium text-gray-900 mb-3 pb-2 border-b">
                     基本信息
                   </h3>
@@ -978,7 +971,7 @@ export function BusinessInfoList() {
                 </div>
 
                 {/* Customer Category */}
-                <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="bg-white rounded-xl shadow-sm p-4">
                   <h3 className="text-sm font-medium text-gray-900 mb-3 pb-2 border-b">
                     客户归类
                   </h3>
@@ -999,7 +992,7 @@ export function BusinessInfoList() {
                 {/* Process Timeline */}
                 <div className="space-y-3">
                   {/* Process Item 1 */}
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="px-4 py-2 bg-blue-50 border-b">
                       <div className="text-xs text-gray-600">2026-04-08 04:32:12</div>
                     </div>
@@ -1024,7 +1017,7 @@ export function BusinessInfoList() {
                   </div>
 
                   {/* Process Item 2 */}
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="px-4 py-2 bg-blue-50 border-b">
                       <div className="text-xs text-gray-600">2026-04-08 06:50:01</div>
                     </div>
@@ -1049,7 +1042,7 @@ export function BusinessInfoList() {
                   </div>
 
                   {/* Process Item 3 */}
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="px-4 py-2 bg-blue-50 border-b">
                       <div className="text-xs text-gray-600">2026-04-08 15:54:07</div>
                     </div>
@@ -1074,7 +1067,7 @@ export function BusinessInfoList() {
                   </div>
 
                   {/* Process Item 4 */}
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="px-4 py-2 bg-blue-50 border-b">
                       <div className="text-xs text-gray-600">2026-04-08 15:54:20</div>
                     </div>
@@ -1110,26 +1103,26 @@ export function BusinessInfoList() {
           <div className="bg-white border-t p-4 shadow-lg">
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => setDetailOpen(false)}
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
+                  onClick={() => setDetailOpen(false)}
+                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors"
+                >
                 返回
               </button>
               {selectedInfo.status === 'unprocessed' && (
                 <>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
                     关联商机
                   </button>
-                  <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                  <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors">
                     创建商机
                   </button>
-                  <button className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors">
                     回退集团
                   </button>
-                  <button className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors">
                     取回
                   </button>
-                  <button className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors">
                     回退驳回
                   </button>
                 </>

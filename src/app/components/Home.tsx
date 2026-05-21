@@ -1,26 +1,16 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { FileText, ClipboardList, TrendingUp, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users, DollarSign } from 'lucide-react';
+import { FileText, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users, DollarSign, MoreHorizontal, Send, MessageSquare } from 'lucide-react';
 
 export function Home() {
   const navigate = useNavigate();
+  const [expandedApp, setExpandedApp] = useState<string | null>(null);
 
   const menuItems = [
     {
       id: 'lead-management',
       icon: FileText,
       label: '线索管理',
-      path: '#',
-    },
-    {
-      id: 'approval',
-      icon: ClipboardList,
-      label: '审批',
-      path: '#',
-    },
-    {
-      id: 'opportunity-rating',
-      icon: TrendingUp,
-      label: '商机评分',
       path: '#',
     },
     {
@@ -33,7 +23,13 @@ export function Home() {
       id: 'data-package',
       icon: Package,
       label: '产数钱包',
-      path: '#',
+      path: '/wallet',
+    },
+    {
+      id: 'ningbo-wallet',
+      icon: Briefcase,
+      label: '宁波钱包',
+      path: '/ningbo-wallet',
     },
     {
       id: 'opportunity-tracking',
@@ -48,22 +44,10 @@ export function Home() {
       path: '/six-standard-list',
     },
     {
-      id: 'expert-dispatch',
-      icon: ClipboardList,
-      label: '专家派单列表',
-      path: '/expert-dispatch',
-    },
-    {
       id: 'expert-task-pool',
       icon: Users,
       label: '专家任务',
       path: '/expert-task-pool',
-    },
-    {
-      id: 'notifications',
-      icon: Bell,
-      label: '消息通知列表',
-      path: '/notifications',
     },
     {
       id: 'revenue-management',
@@ -76,6 +60,16 @@ export function Home() {
       icon: Briefcase,
       label: '商情管理',
       path: '/business-info',
+    },
+    {
+      id: 'more-apps',
+      icon: MoreHorizontal,
+      label: '其他应用',
+      path: '#',
+      children: [
+        { id: 'expert-dispatch', icon: Send, label: '专家派单列表', path: '/expert-dispatch' },
+        { id: 'notifications', icon: MessageSquare, label: '消息通知列表', path: '/notifications' },
+      ],
     },
   ];
 
@@ -108,16 +102,57 @@ export function Home() {
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <button
-                key={item.id}
-                onClick={() => item.path !== '#' && navigate(item.path)}
-                className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded-xl">
-                  <Icon className="w-7 h-7 text-gray-700" />
-                </div>
-                <span className="text-xs text-gray-800 text-center">{item.label}</span>
-              </button>
+              <div key={item.id} className="relative">
+                {item.children ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        const next = menuItems.find(m => m.id === item.id + '-child');
+                        if (next) {
+                          setExpandedApp(item.id === 'more-apps' ? 'more-apps' : null);
+                        }
+                      }}
+                      onMouseEnter={() => setExpandedApp('more-apps')}
+                      className="w-full flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded-xl">
+                        <Icon className="w-7 h-7 text-gray-700" />
+                      </div>
+                      <span className="text-xs text-gray-800 text-center">{item.label}</span>
+                    </button>
+                    {expandedApp === 'more-apps' && item.children && (
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-xl shadow-lg border p-2 z-50 min-w-[140px]">
+                        {item.children.map((child) => {
+                          const ChildIcon = child.icon;
+                          return (
+                            <button
+                              key={child.id}
+                              onClick={() => {
+                                navigate(child.path);
+                                setExpandedApp(null);
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
+                            >
+                              <ChildIcon className="w-4 h-4 text-gray-600" />
+                              <span className="text-gray-700">{child.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <button
+                    onClick={() => item.path !== '#' && navigate(item.path)}
+                    className="w-full flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="w-14 h-14 flex items-center justify-center bg-gray-100 rounded-xl">
+                      <Icon className="w-7 h-7 text-gray-700" />
+                    </div>
+                    <span className="text-xs text-gray-800 text-center">{item.label}</span>
+                  </button>
+                )}
+              </div>
             );
           })}
         </div>

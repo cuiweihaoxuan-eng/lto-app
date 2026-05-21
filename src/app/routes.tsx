@@ -14,6 +14,17 @@ import { ExpertTaskPool } from './components/ExpertTaskPool';
 import { RevenueManagementList } from './components/RevenueManagementList';
 import { RevenueApplyForm } from './components/RevenueApplyForm';
 import { RevenueApplyView } from './components/RevenueApplyView';
+import { WalletHome } from './components/WalletHome';
+import { NingboWalletHome } from './components/NingboWalletHome';
+import { NbValidOppList } from './components/NbValidOppList';
+import { NbLargeOppList } from './components/NbLargeOppList';
+import { NbProjectList } from './components/NbProjectList';
+import { NbHistoryList } from './components/NbHistoryList';
+import { NbTeamReview } from './components/NbTeamReview';
+import { ValidOpportunityList } from './components/ValidOpportunityList';
+import { LargeOpportunityList } from './components/LargeOpportunityList';
+import { ProjectCommissionList } from './components/ProjectCommissionList';
+import { SignReportList } from './components/SignReportList';
 
 export const router = createBrowserRouter(
   [
@@ -76,6 +87,52 @@ export const router = createBrowserRouter(
     {
       path: '/revenue-view/:id',
       Component: RevenueApplyView,
+    },
+    // 产数钱包模块
+    {
+      path: '/wallet',
+      Component: WalletHome,
+    },
+    {
+      path: '/wallet/valid-opportunity',
+      Component: ValidOpportunityList,
+    },
+    {
+      path: '/wallet/large-opportunity',
+      Component: LargeOpportunityList,
+    },
+    {
+      path: '/wallet/project-commission',
+      Component: ProjectCommissionList,
+    },
+    {
+      path: '/wallet/sign-report',
+      Component: SignReportList,
+    },
+  // 宁波钱包模块
+    {
+      path: '/ningbo-wallet',
+      Component: NingboWalletHome,
+    },
+    {
+      path: '/ningbo-wallet/valid-opportunity',
+      Component: NbValidOppList,
+    },
+    {
+      path: '/ningbo-wallet/large-opportunity',
+      Component: NbLargeOppList,
+    },
+    {
+      path: '/ningbo-wallet/project-list',
+      Component: NbProjectList,
+    },
+    {
+      path: '/ningbo-wallet/history-list',
+      Component: NbHistoryList,
+    },
+    {
+      path: '/ningbo-wallet/team-review/:saleOppId',
+      Component: NbTeamReview,
     },
   ],
   {

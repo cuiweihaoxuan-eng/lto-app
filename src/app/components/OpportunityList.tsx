@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { ChevronLeft, Search, Filter, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Checkbox } from './ui/checkbox';
 
 interface Opportunity {
   id: string;
@@ -154,25 +157,20 @@ export function OpportunityList() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-20">
-        <div className="px-4 py-4 flex items-center gap-3">
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate('/')}
             className="text-gray-600 hover:text-gray-800"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900 flex-1">商机列表</h1>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">商机列表</h1>
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="text-gray-600 hover:text-gray-800"
+            className={`p-2 rounded-xl transition-colors ${searchOpen ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
           >
             <Search className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <Filter className="w-5 h-5" />
           </button>
         </div>
 
@@ -182,47 +180,50 @@ export function OpportunityList() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-600'
+              className={`relative flex-1 py-3 text-sm font-medium transition-colors ${
+                activeTab === tab ? 'text-blue-600' : 'text-gray-600'
               }`}
             >
-              {tab}
+              <span className="relative z-10">{tab}</span>
+              {activeTab === tab && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-blue-500 rounded-full" />
+              )}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Search Panel */}
-      {searchOpen && (
-        <div className="bg-white border-b p-4 space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="请输入商机名称、商机编码、客户名称"
-              className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
+        {/* 搜索框和筛选按钮 */}
+        {searchOpen && (
+          <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="请输入商机名称、商机编码、客户名称"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {searchKeyword && (
+                <button
+                  onClick={() => setSearchKeyword('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+            </div>
             <button
-              onClick={handleReset}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+              onClick={() => setFilterOpen(!filterOpen)}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm transition-colors flex-shrink-0 ${
+                filterOpen ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+              }`}
             >
-              重置
-            </button>
-            <button
-              onClick={handleSearch}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-            >
-              查询
+              <Filter className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Filter Sidebar */}
       {filterOpen && (
@@ -253,18 +254,18 @@ export function OpportunityList() {
                 <label className="text-sm font-medium text-gray-700 block mb-2">
                   客户经理
                 </label>
-                <select
-                  value={filterAccountManager}
-                  onChange={(e) => setFilterAccountManager(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="王经理">王经理</option>
-                  <option value="赵经理">赵经理</option>
-                  <option value="孙经理">孙经理</option>
-                  <option value="周经理">周经理</option>
-                  <option value="吴经理">吴经理</option>
-                </select>
+                <Select value={filterAccountManager} onValueChange={setFilterAccountManager}>
+                  <SelectTrigger className="w-full bg-gray-100 rounded-xl text-sm">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="王经理">王经理</SelectItem>
+                    <SelectItem value="赵经理">赵经理</SelectItem>
+                    <SelectItem value="孙经理">孙经理</SelectItem>
+                    <SelectItem value="周经理">周经理</SelectItem>
+                    <SelectItem value="吴经理">吴经理</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 商机状态 */}
@@ -280,17 +281,15 @@ export function OpportunityList() {
                     { value: '已关闭', label: '已关闭' },
                   ].map((status) => (
                     <label key={status.value} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={filterStatus.includes(status.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
+                        onCheckedChange={(checked) => {
+                          if (checked) {
                             setFilterStatus([...filterStatus, status.value]);
                           } else {
                             setFilterStatus(filterStatus.filter((s) => s !== status.value));
                           }
                         }}
-                        className="rounded"
                       />
                       <span className="text-sm text-gray-700">{status.label}</span>
                     </label>
@@ -303,12 +302,12 @@ export function OpportunityList() {
                 <label className="text-sm font-medium text-gray-700 block mb-2">
                   商机区域
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
                   placeholder="请输入区域"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full bg-gray-100 rounded-xl text-sm"
                 />
               </div>
 
@@ -318,18 +317,18 @@ export function OpportunityList() {
                   创建时间
                 </label>
                 <div className="space-y-2">
-                  <input
+                  <Input
                     type="date"
                     value={filterCreateTimeStart}
                     onChange={(e) => setFilterCreateTimeStart(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                   <div className="text-center text-xs text-gray-500">至</div>
-                  <input
+                  <Input
                     type="date"
                     value={filterCreateTimeEnd}
                     onChange={(e) => setFilterCreateTimeEnd(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -346,7 +345,7 @@ export function OpportunityList() {
                     setFilterCreateTimeStart('');
                     setFilterCreateTimeEnd('');
                   }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+                  className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl text-sm"
                 >
                   重置
                 </button>
@@ -355,7 +354,7 @@ export function OpportunityList() {
                     console.log('应用筛选条件');
                     setFilterOpen(false);
                   }}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                  className="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm"
                 >
                   确定
                 </button>
@@ -370,7 +369,7 @@ export function OpportunityList() {
         {mockOpportunities.map((opp) => (
           <div
             key={opp.id}
-            className="bg-white rounded-lg shadow-sm overflow-hidden"
+            className="bg-white rounded-xl shadow-sm overflow-hidden"
           >
             {/* Header with Title and Status */}
             <div className="p-4">
@@ -453,13 +452,13 @@ export function OpportunityList() {
 
             {/* Actions */}
             <div className="px-4 py-3 border-t flex gap-2 overflow-x-auto">
-              <button className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0">
+              <button className="px-3 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-xl whitespace-nowrap flex-shrink-0">
                 详情
               </button>
-              <button className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap flex-shrink-0">
+              <button className="px-3 py-2 text-sm bg-gray-500 hover:bg-gray-600 text-white rounded-xl whitespace-nowrap flex-shrink-0">
                 编辑
               </button>
-              <button className="px-3 py-1.5 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-50 whitespace-nowrap flex-shrink-0">
+              <button className="px-3 py-2 text-sm bg-gray-500 hover:bg-gray-600 text-white rounded-xl whitespace-nowrap flex-shrink-0">
                 跟进
               </button>
             </div>

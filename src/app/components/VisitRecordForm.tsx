@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, X, Camera, Upload } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
 
 interface Participant {
   name: string;
@@ -184,7 +188,7 @@ export function VisitRecordForm() {
       {/* Form */}
       <div className="p-4 space-y-4">
         {/* Customer Info */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="text-sm text-gray-600 mb-2">客户信息</div>
           <div className="space-y-2">
             <div className="text-gray-900">{formData.customerName}</div>
@@ -193,40 +197,35 @@ export function VisitRecordForm() {
         </div>
 
         {/* Visit Type */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-2">
             拜访类型 <span className="text-red-500">*</span>
           </label>
-          <select
-            value={formData.visitType}
-            onChange={(e) => setFormData({ ...formData, visitType: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {visitTypeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <Select value={formData.visitType} onValueChange={(v) => setFormData({ ...formData, visitType: v })}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="请选择拜访类型" />
+            </SelectTrigger>
+            <SelectContent>
+              {visitTypeOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Visit Target */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-2">
             拜访对象 <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            placeholder="请输入拜访对象"
-            value={formData.visitTarget}
-            onChange={(e) => setFormData({ ...formData, visitTarget: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <Input type="text" placeholder="请输入拜访对象" value={formData.visitTarget} onChange={(e) => setFormData({ ...formData, visitTarget: e.target.value })} className="w-full" />
           {errors.visitTarget && <div className="text-red-500 text-xs">{errors.visitTarget}</div>}
         </div>
 
         {/* Their Participants */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm text-gray-600">
               对方参加人员 <span className="text-red-500">*</span>
@@ -241,23 +240,13 @@ export function VisitRecordForm() {
           <div className="space-y-3">
             {theirParticipants.map((participant, index) => (
               <div key={index} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="姓名"
-                  value={participant.name}
-                  onChange={(e) =>
-                    handleParticipantChange('their', index, 'name', e.target.value)
-                  }
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <Input type="text" placeholder="姓名" value={participant.name} onChange={(e) => handleParticipantChange('their', index, 'name', e.target.value)} className="flex-1" />
                 <label className="flex items-center gap-1 text-sm text-gray-600 whitespace-nowrap">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={participant.isLeader}
-                    onChange={(e) =>
-                      handleParticipantChange('their', index, 'isLeader', e.target.checked)
+                    onCheckedChange={(checked) =>
+                      handleParticipantChange('their', index, 'isLeader', !!checked)
                     }
-                    className="w-4 h-4"
                   />
                   高层
                 </label>
@@ -278,7 +267,7 @@ export function VisitRecordForm() {
         </div>
 
         {/* Our Participants */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <label className="text-sm text-gray-600">
               我方参加人员 <span className="text-red-500">*</span>
@@ -293,23 +282,13 @@ export function VisitRecordForm() {
           <div className="space-y-3">
             {ourParticipants.map((participant, index) => (
               <div key={index} className="flex items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="姓名"
-                  value={participant.name}
-                  onChange={(e) =>
-                    handleParticipantChange('our', index, 'name', e.target.value)
-                  }
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                <Input type="text" placeholder="姓名" value={participant.name} onChange={(e) => handleParticipantChange('our', index, 'name', e.target.value)} className="flex-1" />
                 <label className="flex items-center gap-1 text-sm text-gray-600 whitespace-nowrap">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={participant.isLeader}
-                    onChange={(e) =>
-                      handleParticipantChange('our', index, 'isLeader', e.target.checked)
+                    onCheckedChange={(checked) =>
+                      handleParticipantChange('our', index, 'isLeader', !!checked)
                     }
-                    className="w-4 h-4"
                   />
                   领导
                 </label>
@@ -330,58 +309,41 @@ export function VisitRecordForm() {
         </div>
 
         {/* Visit Date */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-2">
             拜访日期 <span className="text-red-500">*</span>
           </label>
-          <input
-            type="date"
-            value={formData.visitDate}
-            onChange={(e) => setFormData({ ...formData, visitDate: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <Input type="date" value={formData.visitDate} onChange={(e) => setFormData({ ...formData, visitDate: e.target.value })} className="w-full" />
           {errors.visitDate && <div className="text-red-500 text-xs">{errors.visitDate}</div>}
         </div>
 
         {/* Visit Location */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-2">
             拜访地点 <span className="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            placeholder="请输入拜访地点"
-            value={formData.visitLocation}
-            onChange={(e) => setFormData({ ...formData, visitLocation: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <Input type="text" placeholder="请输入拜访地点" value={formData.visitLocation} onChange={(e) => setFormData({ ...formData, visitLocation: e.target.value })} className="w-full" />
           {errors.visitLocation && (
             <div className="text-red-500 text-xs">{errors.visitLocation}</div>
           )}
         </div>
 
         {/* Key Points */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-2">
             双方会谈要点事项 <span className="text-red-500">*</span>
           </label>
-          <textarea
-            placeholder="请输入会谈要点事项"
-            value={formData.keyPoints}
-            onChange={(e) => setFormData({ ...formData, keyPoints: e.target.value })}
-            rows={5}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-          />
+          <Textarea placeholder="请输入会谈要点事项" value={formData.keyPoints} onChange={(e) => setFormData({ ...formData, keyPoints: e.target.value })} className="w-full" rows={5} />
           {errors.keyPoints && <div className="text-red-500 text-xs">{errors.keyPoints}</div>}
         </div>
 
         {/* Photos */}
-        <div className="bg-white rounded-lg p-4 shadow-sm">
+        <div className="bg-white rounded-xl p-4 shadow-sm">
           <label className="block text-sm text-gray-600 mb-3">照片上传</label>
           <div className="grid grid-cols-3 gap-3">
             {photos.map((photo, index) => (
-              <div key={index} className="relative aspect-square bg-gray-100 rounded-lg">
-                <img src={photo} alt="" className="w-full h-full object-cover rounded-lg" />
+              <div key={index} className="relative aspect-square bg-gray-100 rounded-xl">
+                <img src={photo} alt="" className="w-full h-full object-cover rounded-xl" />
                 <button
                   onClick={() => setPhotos(photos.filter((_, i) => i !== index))}
                   className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center"
@@ -395,7 +357,7 @@ export function VisitRecordForm() {
               <>
                 <button
                   onClick={handleTakePhoto}
-                  className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center gap-1 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                  className="aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <Camera className="w-6 h-6 text-gray-400" />
                   <span className="text-xs text-gray-500">拍照</span>
@@ -403,7 +365,7 @@ export function VisitRecordForm() {
 
                 <button
                   onClick={handlePhotoUpload}
-                  className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center gap-1 hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                  className="aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-blue-500 hover:bg-blue-50 transition-colors"
                 >
                   <Upload className="w-6 h-6 text-gray-400" />
                   <span className="text-xs text-gray-500">上传</span>
@@ -418,7 +380,7 @@ export function VisitRecordForm() {
         <div className="pb-4">
           <button
             onClick={handleSubmit}
-            className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-medium"
+            className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 font-medium text-sm transition-colors"
           >
             保存
           </button>

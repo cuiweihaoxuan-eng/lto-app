@@ -3,6 +3,10 @@ import { ChevronLeft, Search, Filter, X, ChevronUp, ChevronDown, CheckCircle, Ch
 import { useNavigate, useSearchParams } from 'react-router';
 import { Sheet, SheetContent } from './ui/sheet';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
 
 interface SixStandardItem {
   id: string;
@@ -296,33 +300,36 @@ function StatsTab() {
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isDone ? (
-            <div className="bg-green-50 rounded-lg p-4 text-center">
+            <div className="bg-green-50 rounded-xl p-4 text-center">
               <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
               <p className="text-sm text-green-700">已完成录入</p>
             </div>
           ) : (
-            <div className="bg-white rounded-lg p-4 space-y-3">
+            <div className="bg-white rounded-xl p-4 space-y-3">
               <div>
                 <label className="text-xs text-gray-500 block mb-1">
                   是否完成 <span className="text-red-500">*</span>
                 </label>
-                <select
+                <Select
                   value={formData[activeCategoryId] || ''}
-                  onChange={(e) => handleChange(activeCategoryId, e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  onValueChange={(value) => handleChange(activeCategoryId, value)}
                 >
-                  <option value="">请选择</option>
-                  <option value="是">是</option>
-                  <option value="否">否</option>
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="是">是</SelectItem>
+                    <SelectItem value="否">否</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="text-xs text-gray-500 block mb-1">备注说明</label>
-                <textarea
+                <Textarea
                   placeholder="请输入备注说明"
                   value={formData[`${activeCategoryId}_remark`] || ''}
                   onChange={(e) => handleChange(`${activeCategoryId}_remark`, e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
+                  className="w-full"
                   rows={3}
                 />
               </div>
@@ -348,7 +355,7 @@ function StatsTab() {
           const allDone = moduleDoneCount === moduleTotal;
 
           return (
-            <div key={module.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div key={module.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
               <div
                 className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
                 onClick={() => toggleModule(module.id)}
@@ -373,7 +380,7 @@ function StatsTab() {
                       >
                         <div className="flex items-center gap-2 flex-1">
                           <div className={`w-2 h-2 rounded-full flex-shrink-0 ${catDone ? 'bg-green-500' : 'bg-gray-300'}`} />
-                          <span className="text-sm text-gray-700">{cat.name}</span>
+                          <span className="text-sm text-gray-600">{cat.name}</span>
                           {catDone && <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />}
                         </div>
                         <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -435,25 +442,14 @@ export function SixStandardList() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b sticky top-0 z-20">
-        <div className="px-4 py-4 flex items-center gap-3">
-          <button
-            onClick={() => navigate('/')}
-            className="text-gray-600 hover:text-gray-800"
-          >
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
+          <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-800">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900 flex-1">六到位详情</h1>
-          <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="text-gray-600 hover:text-gray-800"
-          >
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">六到位详情</h1>
+          <button onClick={() => setSearchOpen(!searchOpen)} className={`p-2 rounded-xl transition-colors ${searchOpen ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
             <Search className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => setFilterOpen(!filterOpen)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            <Filter className="w-5 h-5" />
           </button>
         </div>
 
@@ -461,52 +457,52 @@ export function SixStandardList() {
         <div className="flex border-b">
           <button
             onClick={() => setActiveTab('list')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors ${
-              activeTab === 'list'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600'
+            className={`relative flex-1 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'list' ? 'text-blue-600' : 'text-gray-600'
             }`}
           >
-            六到位清单
+            <span className="relative z-10">六到位清单</span>
+            {activeTab === 'list' && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-20 h-0.5 bg-blue-500 rounded-full" />
+            )}
           </button>
           <button
             onClick={() => navigate('/six-standard-statistics')}
-            className="flex-1 py-3 text-sm font-medium transition-colors text-gray-600"
+            className="relative flex-1 py-3 text-sm font-medium transition-colors text-gray-600"
           >
-            六到位统计
+            <span className="relative z-10">六到位统计</span>
           </button>
         </div>
-      </div>
 
-      {/* Search Panel */}
-      {searchOpen && (
-        <div className="bg-white border-b p-4 space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="输入商机名称/编码、合同名称/编码、项目名称/编码"
-              className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm"
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2">
+        {/* 搜索框和筛选按钮 */}
+        {searchOpen && (
+          <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="输入商机名称/编码、合同名称/编码、项目名称/编码"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                className="w-full pl-10 pr-10"
+              />
+              {searchKeyword && (
+                <button onClick={() => setSearchKeyword('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+            </div>
             <button
-              onClick={() => setSearchKeyword('')}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+              onClick={() => setFilterOpen(!filterOpen)}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm transition-colors flex-shrink-0 ${
+                filterOpen ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+              }`}
             >
-              重置
-            </button>
-            <button
-              onClick={() => setSearchOpen(false)}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
-            >
-              查询
+              <Filter className="w-4 h-4" />
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Filter Sidebar */}
       {filterOpen && (
@@ -516,39 +512,36 @@ export function SixStandardList() {
             onClick={() => setFilterOpen(false)}
           />
           <div className="fixed right-0 top-0 bottom-0 w-80 bg-white z-50 flex flex-col shadow-xl">
-            <div className="px-4 py-4 border-b flex items-center justify-between">
+            <div className="px-6 py-4 border-b flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-900">筛选条件</h2>
-              <button
-                onClick={() => setFilterOpen(false)}
-                className="text-gray-600 hover:text-gray-800"
-              >
+              <button onClick={() => setFilterOpen(false)} className="text-gray-600 hover:text-gray-800">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               {/* 客户经理 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   客户经理
                 </label>
-                <select
-                  value={filterAccountManager}
-                  onChange={(e) => setFilterAccountManager(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                >
-                  <option value="">请选择</option>
-                  <option value="王经理">王经理</option>
-                  <option value="赵经理">赵经理</option>
-                  <option value="孙经理">孙经理</option>
-                  <option value="周经理">周经理</option>
-                  <option value="吴经理">吴经理</option>
-                </select>
+                <Select value={filterAccountManager} onValueChange={setFilterAccountManager}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="请选择" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="王经理">王经理</SelectItem>
+                    <SelectItem value="赵经理">赵经理</SelectItem>
+                    <SelectItem value="孙经理">孙经理</SelectItem>
+                    <SelectItem value="周经理">周经理</SelectItem>
+                    <SelectItem value="吴经理">吴经理</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* 商机状态 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商机状态
                 </label>
                 <div className="space-y-2">
@@ -559,19 +552,17 @@ export function SixStandardList() {
                     { value: '已关闭', label: '已关闭' },
                   ].map((status) => (
                     <label key={status.value} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         checked={filterStatus.includes(status.value)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
+                        onCheckedChange={(checked) => {
+                          if (checked) {
                             setFilterStatus([...filterStatus, status.value]);
                           } else {
                             setFilterStatus(filterStatus.filter((s) => s !== status.value));
                           }
                         }}
-                        className="rounded"
                       />
-                      <span className="text-sm text-gray-700">{status.label}</span>
+                      <span className="text-sm text-gray-600">{status.label}</span>
                     </label>
                   ))}
                 </div>
@@ -579,120 +570,120 @@ export function SixStandardList() {
 
               {/* 商机区域 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商机区域
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
                   placeholder="请输入区域"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 商机名称 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商机名称
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterOppName}
                   onChange={(e) => setFilterOppName(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 商机编码 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   商机编码
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterOppCode}
                   onChange={(e) => setFilterOppCode(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 合同名称 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   合同名称
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterContractName}
                   onChange={(e) => setFilterContractName(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 合同编码 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   合同编码
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterContractCode}
                   onChange={(e) => setFilterContractCode(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 项目名称 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   项目名称
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterProjectName}
                   onChange={(e) => setFilterProjectName(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 项目编码 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   项目编码
                 </label>
-                <input
+                <Input
                   type="text"
                   value={filterProjectCode}
                   onChange={(e) => setFilterProjectCode(e.target.value)}
                   placeholder="请输入"
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
+                  className="w-full"
                 />
               </div>
 
               {/* 创建时间 */}
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
+                <label className="text-sm text-gray-500 mb-2 block">
                   创建时间
                 </label>
                 <div className="space-y-2">
-                  <input
+                  <Input
                     type="date"
                     value={filterCreateTimeStart}
                     onChange={(e) => setFilterCreateTimeStart(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                   <div className="text-center text-xs text-gray-500">至</div>
-                  <input
+                  <Input
                     type="date"
                     value={filterCreateTimeEnd}
                     onChange={(e) => setFilterCreateTimeEnd(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-lg text-sm"
+                    className="w-full"
                   />
                 </div>
               </div>
@@ -714,13 +705,13 @@ export function SixStandardList() {
                     setFilterProjectName('');
                     setFilterProjectCode('');
                   }}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm"
+                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl text-sm"
                 >
                   重置
                 </button>
                 <button
                   onClick={() => setFilterOpen(false)}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm"
                 >
                   确定
                 </button>
@@ -737,7 +728,7 @@ export function SixStandardList() {
         {mockSixStandardList.map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-lg shadow-sm overflow-hidden"
+            className="bg-white rounded-xl shadow-sm overflow-hidden"
           >
             {/* Header */}
             <div className="p-4">
@@ -776,13 +767,13 @@ export function SixStandardList() {
                   const pct = total > 0 ? (completed / total) * 100 : 0;
                   const isDone = completed === total && total > 0;
                   const isNotReached = total === 0;
-                  const barColor = isDone ? '#22C55E' : isNotReached ? '#9CA3AF' : '#EF4444';
+                  const barColorHex = isDone ? '#22C55E' : isNotReached ? '#9CA3AF' : '#EF4444';
                   return (
-                    <div key={key} className="relative px-2 py-0.5 rounded overflow-hidden" style={{ backgroundColor: '#F3F4F6' }}>
+                    <div key={key} className="relative px-2 py-0.5 rounded overflow-hidden bg-gray-100">
                       <div
                         className="absolute inset-0 rounded"
                         style={{
-                          backgroundColor: barColor,
+                          backgroundColor: barColorHex,
                           width: `${pct}%`,
                           opacity: isNotReached ? 0 : 0.25,
                         }}
@@ -842,7 +833,7 @@ export function SixStandardList() {
             <div className="px-4 py-3 border-t flex gap-2 overflow-x-auto">
               <button
                 onClick={() => handleViewDetail(item.id)}
-                className="px-3 py-1.5 text-xs text-blue-600 border border-blue-600 rounded hover:bg-blue-50 whitespace-nowrap flex-shrink-0"
+                className="px-3 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl whitespace-nowrap flex-shrink-0"
               >
                 查看详情
               </button>

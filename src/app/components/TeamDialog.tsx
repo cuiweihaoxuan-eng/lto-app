@@ -4,6 +4,7 @@ import { Search, X, ChevronLeft, Plus, Star } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
+import { Input } from './ui/input';
 
 interface TeamMember {
   id: string;
@@ -512,12 +513,12 @@ function ParticipationDialog({
             <Label htmlFor="visitTime" className="text-sm text-gray-700">
               走访时间
             </Label>
-            <input
+            <Input
               id="visitTime"
               type="datetime-local"
               value={visitTime}
               onChange={(e) => setVisitTime(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full"
             />
           </div>
         </div>
@@ -525,13 +526,13 @@ function ParticipationDialog({
         <div className="flex gap-3">
           <button
             onClick={() => onOpenChange(false)}
-            className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="flex-1 py-2.5 text-sm bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
           >
             取消
           </button>
           <button
             onClick={handleConfirm}
-            className="flex-1 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            className="flex-1 py-2.5 text-sm text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-colors"
           >
             确定
           </button>
@@ -826,7 +827,7 @@ export function TeamDialog({ open, onOpenChange, task }: TeamDialogProps) {
                   </div>
                 ) : (
                   <div className="px-6 py-4">
-                    <div className="bg-white divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                    <div className="bg-white divide-y divide-gray-200 border border-gray-200 rounded-xl">
                       {currentAddedMembers.map((member) => (
                         <div
                           key={member.id}
@@ -934,14 +935,14 @@ export function TeamDialog({ open, onOpenChange, task }: TeamDialogProps) {
               <>
                 {/* Search Bar */}
                 <div className="px-6 py-4 flex-shrink-0">
-                  <div className="flex items-center bg-gray-100 rounded-lg px-4 py-3">
+                  <div className="flex items-center bg-gray-100 rounded-xl px-4 py-3">
                     <Search className="w-5 h-5 text-gray-400" />
-                    <input
+                    <Input
                       type="text"
                       placeholder="请输入关键字搜索"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="flex-1 bg-transparent border-none outline-none ml-2 text-gray-700 placeholder:text-gray-400"
+                      className="flex-1 bg-transparent border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </div>
                 </div>
@@ -955,14 +956,14 @@ export function TeamDialog({ open, onOpenChange, task }: TeamDialogProps) {
                         <Star className="w-4 h-4 text-orange-500 fill-current" />
                         <h3 className="text-sm font-medium text-gray-700">推荐专家</h3>
                       </div>
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg divide-y divide-orange-200">
+                      <div className="bg-orange-50 border border-orange-200 rounded-xl divide-y divide-orange-200">
                         {recommendedExperts.map((member) => renderMemberCard(member, true))}
                       </div>
                     </div>
                   )}
 
                   {/* 普通成员列表 */}
-                  <div className="bg-white divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                  <div className="bg-white divide-y divide-gray-200 border border-gray-200 rounded-xl">
                     {displayedMembers.length === 0 ? (
                       <div className="p-8 text-center text-gray-400">
                         暂无结果
@@ -988,7 +989,7 @@ export function TeamDialog({ open, onOpenChange, task }: TeamDialogProps) {
             {viewMode === 'added' ? (
               <button
                 onClick={handleAddClick}
-                className="w-full py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm"
               >
                 <Plus className="w-4 h-4" />
                 添加
@@ -997,19 +998,19 @@ export function TeamDialog({ open, onOpenChange, task }: TeamDialogProps) {
               <>
                 <button
                   onClick={handleCancel}
-                  className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   取消
                 </button>
                 <button
                   onClick={handleReset}
-                  className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 py-3 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   重置
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="flex-1 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+                  className="flex-1 py-3 text-sm text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-colors"
                 >
                   确定
                 </button>

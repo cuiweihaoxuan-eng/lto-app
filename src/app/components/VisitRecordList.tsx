@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ChevronLeft, Plus, Calendar, User, MapPin, Edit2, Trash2, Link } from 'lucide-react';
+import { ChevronLeft, Plus, Calendar, User, MapPin, Edit2, Trash2, Link, Search } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
+import { Input } from './ui/input';
 
 interface VisitRecord {
   id: string;
@@ -153,40 +154,55 @@ export function VisitRecordList() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="px-4 py-4 flex items-center gap-3">
+      <div className="bg-white border-b sticky top-0 z-20">
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
           <button
             onClick={() => navigate(`/six-standard/${taskId}`)}
             className="text-gray-600 hover:text-gray-800"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900 flex-1">拜访记录</h1>
-          <button
-            onClick={handleLinkWalkVisit}
-            className="flex items-center gap-1 px-3 py-1.5 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50"
-          >
-            <Link className="w-4 h-4" />
-            <span className="text-sm">关联走访记录</span>
-          </button>
-          <button
-            onClick={handleAddRecord}
-            className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="text-sm">新增</span>
-          </button>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">拜访记录</h1>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleLinkWalkVisit}
+              className="flex items-center gap-1 px-3 py-1.5 border border-blue-500 text-blue-500 rounded-xl hover:bg-blue-50 text-sm"
+            >
+              <Link className="w-4 h-4" />
+              关联
+            </button>
+            <button
+              onClick={handleAddRecord}
+              className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white rounded-xl hover:bg-blue-600 text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              新增
+            </button>
+          </div>
+        </div>
+
+        {/* 搜索框和筛选按钮 */}
+        <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="搜索拜访记录"
+              className="w-full pl-10 pr-10 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         </div>
       </div>
 
       {/* Records List */}
       <div className="p-4 space-y-4">
         {records.length === 0 ? (
-          <div className="bg-white rounded-lg p-8 text-center">
+          <div className="bg-white rounded-xl p-8 text-center">
             <div className="text-gray-400 mb-4">暂无拜访记录</div>
             <button
               onClick={handleAddRecord}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              className="px-6 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
             >
               添加拜访记录
             </button>
@@ -195,7 +211,7 @@ export function VisitRecordList() {
           records.map((record) => (
             <div
               key={record.id}
-              className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white rounded-xl p-4 shadow-sm"
             >
               <button
                 onClick={() => handleViewRecord(record.id)}
@@ -244,14 +260,14 @@ export function VisitRecordList() {
               <div className="flex gap-2 mt-4 pt-3 border-t">
                 <button
                   onClick={(e) => handleEditRecord(record.id, e)}
-                  className="flex-1 flex items-center justify-center gap-1 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50"
+                  className="flex-1 flex items-center justify-center gap-1 px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
                 >
                   <Edit2 className="w-4 h-4" />
                   <span>编辑</span>
                 </button>
                 <button
                   onClick={(e) => handleDeleteClick(record.id, e)}
-                  className="flex-1 flex items-center justify-center gap-1 px-4 py-2 text-sm text-red-600 border border-red-600 rounded-lg hover:bg-red-50"
+                  className="flex-1 flex items-center justify-center gap-1 px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-xl"
                 >
                   <Trash2 className="w-4 h-4" />
                   <span>删除</span>
@@ -272,13 +288,13 @@ export function VisitRecordList() {
           <div className="flex gap-3 mt-4">
             <button
               onClick={() => setDeleteDialogOpen(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              className="flex-1 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl"
             >
               取消
             </button>
             <button
               onClick={handleConfirmDelete}
-              className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              className="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
             >
               删除
             </button>
@@ -297,7 +313,7 @@ export function VisitRecordList() {
             {mockWalkVisitRecords.map((walkVisit) => (
               <div
                 key={walkVisit.id}
-                className="bg-gray-100 rounded-lg p-3 cursor-pointer hover:bg-gray-200"
+                className="bg-gray-100 rounded-xl p-3 cursor-pointer hover:bg-gray-200"
                 onClick={() => handleSelectWalkVisit(walkVisit)}
               >
                 <div className="text-gray-600 mb-1">日期：{walkVisit.visitDate}</div>
@@ -310,7 +326,7 @@ export function VisitRecordList() {
           <div className="flex gap-3 mt-4">
             <button
               onClick={() => setWalkVisitDialogOpen(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+              className="flex-1 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-xl"
             >
               关闭
             </button>

@@ -1,3 +1,6 @@
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Textarea } from './ui/textarea';
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
 import { Search, X, Plus, Star, Users, Clock, MapPin, Calendar, Paperclip, Filter, ChevronLeft, Camera, Upload, FileText } from 'lucide-react';
@@ -375,15 +378,15 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
           <div className="space-y-2">
             <Label htmlFor="taskName" className="text-sm text-gray-700">任务名称 *</Label>
-            <input id="taskName" type="text" value={name} onChange={(e) => setName(e.target.value)}
-              placeholder="请输入任务名称" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <Input id="taskName" type="text" value={name} onChange={(e) => setName(e.target.value)}
+              placeholder="请输入任务名称" className="w-full" />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="taskDesc" className="text-sm text-gray-700">任务描述 *</Label>
-            <textarea id="taskDesc" value={description} onChange={(e) => setDescription(e.target.value)}
+            <Textarea id="taskDesc" value={description} onChange={(e) => setDescription(e.target.value)}
               placeholder="请输入任务描述" rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              className="w-full resize-none" />
           </div>
 
           <div className="space-y-2">
@@ -416,18 +419,18 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
             <>
               <div className="space-y-2">
                 <Label htmlFor="customerName" className="text-sm text-gray-700">客户名称 *</Label>
-                <input id="customerName" type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="请输入客户名称" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Input id="customerName" type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="请输入客户名称" className="w-full" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="customerAddress" className="text-sm text-gray-700">客户地址 *</Label>
-                <input id="customerAddress" type="text" value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)}
-                  placeholder="请输入客户地址" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Input id="customerAddress" type="text" value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)}
+                  placeholder="请输入客户地址" className="w-full" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="opportunityCode" className="text-sm text-gray-700">商机编码 *</Label>
-                <input id="opportunityCode" type="text" value={opportunityCode} onChange={(e) => setOpportunityCode(e.target.value)}
-                  placeholder="请输入商机编码" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Input id="opportunityCode" type="text" value={opportunityCode} onChange={(e) => setOpportunityCode(e.target.value)}
+                  placeholder="请输入商机编码" className="w-full" />
               </div>
             </>
           )}
@@ -435,32 +438,32 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="region" className="text-sm text-gray-700">区域 *</Label>
-              <input id="region" type="text" value={region} onChange={(e) => setRegion(e.target.value)}
-                placeholder="如：宁波市" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <Input id="region" type="text" value={region} onChange={(e) => setRegion(e.target.value)}
+                placeholder="如：宁波市" className="w-full" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="requiredCount" className="text-sm text-gray-700">需求人数 *</Label>
-              <input id="requiredCount" type="number" value={requiredCount} onChange={(e) => setRequiredCount(e.target.value)}
-                placeholder="如：3" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <Input id="requiredCount" type="number" value={requiredCount} onChange={(e) => setRequiredCount(e.target.value)}
+                placeholder="如：3" min="1" className="w-full" />
             </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="estimatedHours" className="text-sm text-gray-700">预计工时（人/天） *</Label>
-            <input id="estimatedHours" type="number" value={estimatedHours} onChange={(e) => setEstimatedHours(e.target.value)}
-              placeholder="如：40" min="1" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <Input id="estimatedHours" type="number" value={estimatedHours} onChange={(e) => setEstimatedHours(e.target.value)}
+              placeholder="如：40" min="1" className="w-full" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="startTime" className="text-sm text-gray-700">开始时间 *</Label>
-              <input id="startTime" type="date" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <Input id="startTime" type="date" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+                className="w-full" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="endTime" className="text-sm text-gray-700">结束时间 *</Label>
-              <input id="endTime" type="date" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <Input id="endTime" type="date" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+                className="w-full" />
             </div>
           </div>
 
@@ -471,14 +474,14 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
               {/* 拍照 */}
               <button
                 onClick={handleCameraCapture}
-                className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors"
               >
                 <Camera className="w-8 h-8 text-gray-400 mb-2" />
                 <span className="text-xs text-gray-500">拍照</span>
               </button>
 
               {/* 从相册选择 */}
-              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
+              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
                 <input
                   type="file"
                   accept="image/*"
@@ -491,7 +494,7 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
               </label>
 
               {/* 文件 */}
-              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
+              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx,.xls,.xlsx"
@@ -511,7 +514,7 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
               <Label className="text-sm text-gray-700">已上传附件</Label>
               <div className="space-y-2">
                 {attachments.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <Paperclip className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       <span className="text-sm text-gray-700 truncate">{file}</span>
@@ -530,8 +533,8 @@ function PublishTaskDialog({ open, onOpenChange, onSubmit }: PublishTaskFormProp
         </div>
 
         <div className="flex gap-3 px-6 py-4 border-t bg-white flex-shrink-0">
-          <button onClick={() => onOpenChange(false)} className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleSubmit} className="flex-1 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600">发布</button>
+          <button onClick={() => onOpenChange(false)} className="flex-1 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleSubmit} className="flex-1 py-2.5 text-sm text-white bg-blue-500 rounded-xl hover:bg-blue-600">发布</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -563,8 +566,8 @@ function ApplyConfirmDialog({ open, onOpenChange, taskName, onConfirm }: ApplyCo
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => onOpenChange(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleConfirm} className="flex-1 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">确认申请</button>
+          <button onClick={() => onOpenChange(false)} className="flex-1 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleConfirm} className="flex-1 py-2.5 text-sm text-white bg-blue-500 rounded-xl hover:bg-blue-600">确认申请</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -596,8 +599,8 @@ function CancelConfirmDialog({ open, onOpenChange, taskName, onConfirm }: Cancel
           </p>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => onOpenChange(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleConfirm} className="flex-1 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600">确认撤单</button>
+          <button onClick={() => onOpenChange(false)} className="flex-1 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleConfirm} className="flex-1 py-2.5 text-sm text-white bg-red-500 rounded-xl hover:bg-red-600">确认撤单</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -629,14 +632,14 @@ function AuditDialog({ open, onOpenChange, action, onSubmit }: AuditDialogProps)
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="auditReason" className="text-sm text-gray-700">{action === 'approve' ? '通过原因' : '拒绝原因'}</Label>
-            <textarea id="auditReason" value={reason} onChange={(e) => setReason(e.target.value)}
+            <Textarea id="auditReason" value={reason} onChange={(e) => setReason(e.target.value)}
               placeholder={`请输入${action === 'approve' ? '通过原因' : '拒绝原因'}`} rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              className="w-full resize-none" />
           </div>
         </div>
         <div className="flex gap-3">
-          <button onClick={() => onOpenChange(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleSubmit} className={`flex-1 py-2 text-white rounded-lg hover:opacity-90 ${action === 'approve' ? 'bg-green-500' : 'bg-red-500'}`}>确定</button>
+          <button onClick={() => onOpenChange(false)} className="flex-1 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleSubmit} className={`flex-1 py-2.5 text-sm text-white rounded-xl hover:opacity-90 ${action === 'approve' ? 'bg-green-500' : 'bg-red-500'}`}>确定</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -755,14 +758,14 @@ function TaskDetailDialog({ task, open, onOpenChange, onAction, secondTab }: Tas
           {/* 操作按钮 - 根据 secondTab 区分 */}
           {secondTab === '我发起的任务' && task.status === '待审核' && (
             <div className="flex flex-wrap gap-2 pt-2">
-              <button onClick={() => onAction(task.id, 'cancel')} className="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">撤单</button>
+              <button onClick={() => onAction(task.id, 'cancel')} className="px-3 py-2 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 text-sm">撤单</button>
             </div>
           )}
 
           {secondTab === '我发起的任务' && task.status === '待接单' && (
             <div className="flex flex-wrap gap-2 pt-2">
-              <button onClick={() => onAction(task.id, 'cancel')} className="px-3 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">撤单</button>
-              <button onClick={() => onAction(task.id, 'invite')} className="px-3 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 text-sm">派单</button>
+              <button onClick={() => onAction(task.id, 'cancel')} className="px-3 py-2 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 text-sm">撤单</button>
+              <button onClick={() => onAction(task.id, 'invite')} className="px-3 py-2 text-blue-600 border border-blue-600 rounded-xl hover:bg-blue-50 text-sm">派单</button>
             </div>
           )}
 
@@ -774,8 +777,8 @@ function TaskDetailDialog({ task, open, onOpenChange, onAction, secondTab }: Tas
 
           {secondTab === '我审核的任务' && task.status === '待审核' && (
             <div className="flex flex-wrap gap-2 pt-2">
-              <button onClick={() => onAction(task.id, 'approve')} className="px-3 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 text-sm">审核通过</button>
-              <button onClick={() => onAction(task.id, 'reject')} className="px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 text-sm">审核拒绝</button>
+              <button onClick={() => onAction(task.id, 'approve')} className="px-3 py-2 text-white bg-green-500 rounded-xl hover:bg-green-600 text-sm">审核通过</button>
+              <button onClick={() => onAction(task.id, 'reject')} className="px-3 py-2 text-white bg-red-500 rounded-xl hover:bg-red-600 text-sm">审核拒绝</button>
             </div>
           )}
 
@@ -787,8 +790,8 @@ function TaskDetailDialog({ task, open, onOpenChange, onAction, secondTab }: Tas
 
           {secondTab === '我接收的任务' && 'source' in task && (task as DispatchItem).status === '待接单' && (task as DispatchItem).source === 'dispatch' && (
             <div className="flex flex-wrap gap-2 pt-2">
-              <button onClick={() => onAction(task.id, 'accept')} className="px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 text-sm">接单</button>
-              <button onClick={() => onAction(task.id, 'refuse')} className="px-3 py-2 text-red-500 border border-red-500 rounded-lg hover:bg-red-50 text-sm">拒绝</button>
+              <button onClick={() => onAction(task.id, 'accept')} className="px-3 py-2 text-white bg-blue-500 rounded-xl hover:bg-blue-600 text-sm">接单</button>
+              <button onClick={() => onAction(task.id, 'refuse')} className="px-3 py-2 text-red-500 border border-red-500 rounded-xl hover:bg-red-50 text-sm">拒绝</button>
             </div>
           )}
 
@@ -800,7 +803,7 @@ function TaskDetailDialog({ task, open, onOpenChange, onAction, secondTab }: Tas
 
           {secondTab === '我接收的任务' && 'source' in task && (task as DispatchItem).status === '已接单' && (
             <div className="flex flex-wrap gap-2 pt-2">
-              <button onClick={() => onAction(task.id, 'supplement')} className="px-3 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 text-sm">补充信息</button>
+              <button onClick={() => onAction(task.id, 'supplement')} className="px-3 py-2 text-white bg-green-500 rounded-xl hover:bg-green-600 text-sm">补充信息</button>
             </div>
           )}
 
@@ -810,7 +813,7 @@ function TaskDetailDialog({ task, open, onOpenChange, onAction, secondTab }: Tas
               <h4 className="font-medium text-gray-800">接单人信息</h4>
               <div className="space-y-3">
                 {(task.members || []).map((member) => (
-                  <div key={member.id} className="bg-gray-50 rounded-lg p-4 space-y-2">
+                  <div key={member.id} className="bg-gray-50 rounded-xl p-4 space-y-2">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
                         <div className="font-medium flex items-center gap-1">
@@ -916,11 +919,11 @@ function SelectExpertDialog({ open, onOpenChange, onSelect, selectedIds }: Selec
         </div>
 
         <div className="px-6 py-4 flex-shrink-0">
-          <div className="flex items-center bg-gray-100 rounded-lg px-4 py-3">
+          <div className="flex items-center bg-gray-100 rounded-xl px-4 py-3">
             <Search className="w-5 h-5 text-gray-400" />
-            <input type="text" placeholder="搜索专家姓名、电话、部门" value={searchQuery}
+            <Input type="text" placeholder="搜索专家姓名、电话、部门" value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent border-none outline-none ml-2 text-gray-700" />
+              className="flex-1 bg-transparent border-none outline-none ml-2" />
           </div>
         </div>
 
@@ -928,7 +931,7 @@ function SelectExpertDialog({ open, onOpenChange, onSelect, selectedIds }: Selec
           {filteredExperts.length === 0 ? (
             <div className="text-center text-gray-400 py-8">暂无结果</div>
           ) : (
-            <div className="bg-white border border-gray-200 rounded-lg divide-y divide-gray-200">
+            <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-200">
               {filteredExperts.map((expert) => {
                 const isSelected = tempSelectedIds.includes(expert.id);
                 return (
@@ -956,8 +959,8 @@ function SelectExpertDialog({ open, onOpenChange, onSelect, selectedIds }: Selec
 
         <div className="flex gap-3 px-6 py-4 border-t bg-white flex-shrink-0">
           <button onClick={() => { setTempSelectedIds([]); setSearchQuery(''); onOpenChange(false); }}
-            className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleConfirm} className="flex-1 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600">确定 ({tempSelectedIds.length})</button>
+            className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleConfirm} className="flex-1 py-3 text-white bg-blue-500 rounded-xl hover:bg-blue-600">确定 ({tempSelectedIds.length})</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -1014,20 +1017,20 @@ function ParticipateDialog({ open, onOpenChange, member, onConfirm }: Participat
             <>
               <div className="space-y-2">
                 <Label htmlFor="startTime" className="text-sm text-gray-700">开始时间</Label>
-                <input id="startTime" type="date" value={startTime} onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Input id="startTime" type="date" value={startTime} onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="endTime" className="text-sm text-gray-700">结束时间</Label>
-                <input id="endTime" type="date" value={endTime} onChange={(e) => setEndTime(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <Input id="endTime" type="date" value={endTime} onChange={(e) => setEndTime(e.target.value)}
+                  className="w-full" />
               </div>
             </>
           )}
         </div>
         <div className="flex gap-3">
-          <button onClick={() => onOpenChange(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-          <button onClick={handleConfirm} className="flex-1 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">确定</button>
+          <button onClick={() => onOpenChange(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+          <button onClick={handleConfirm} className="flex-1 py-2 text-white bg-blue-500 rounded-xl hover:bg-blue-600">确定</button>
         </div>
       </DialogContent>
     </Dialog>
@@ -1103,13 +1106,13 @@ function SupplementDialog({ open, onOpenChange, taskName, onSubmit }: Supplement
           {/* 文本内容 */}
           <div className="space-y-2">
             <Label htmlFor="supplementContent" className="text-sm text-gray-700">补充内容 *</Label>
-            <textarea
+            <Textarea
               id="supplementContent"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="请输入补充内容..."
               rows={5}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full resize-none"
             />
           </div>
 
@@ -1120,14 +1123,14 @@ function SupplementDialog({ open, onOpenChange, taskName, onSubmit }: Supplement
               {/* 拍照 */}
               <button
                 onClick={handleCameraCapture}
-                className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors"
               >
                 <Camera className="w-8 h-8 text-gray-400 mb-2" />
                 <span className="text-xs text-gray-500">拍照</span>
               </button>
 
               {/* 从相册选择 */}
-              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
+              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
                 <input
                   type="file"
                   accept="image/*"
@@ -1140,7 +1143,7 @@ function SupplementDialog({ open, onOpenChange, taskName, onSubmit }: Supplement
               </label>
 
               {/* 文件 */}
-              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
+              <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-colors cursor-pointer">
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx,.xls,.xlsx"
@@ -1160,7 +1163,7 @@ function SupplementDialog({ open, onOpenChange, taskName, onSubmit }: Supplement
               <Label className="text-sm text-gray-700">已上传附件</Label>
               <div className="space-y-2">
                 {attachments.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                       <Paperclip className="w-4 h-4 text-gray-400 flex-shrink-0" />
                       <span className="text-sm text-gray-700 truncate">{file}</span>
@@ -1181,14 +1184,14 @@ function SupplementDialog({ open, onOpenChange, taskName, onSubmit }: Supplement
         <div className="flex gap-3 px-6 py-4 border-t bg-white flex-shrink-0">
           <button
             onClick={() => onOpenChange(false)}
-            className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50"
           >
             取消
           </button>
           <button
             onClick={handleSubmit}
             disabled={!content.trim()}
-            className={`flex-1 py-3 rounded-lg ${
+            className={`flex-1 py-3 rounded-xl ${
               content.trim()
                 ? 'text-white bg-blue-500 hover:bg-blue-600'
                 : 'text-gray-400 bg-gray-200 cursor-not-allowed'
@@ -1253,50 +1256,56 @@ function FilterSidebar({
           {showTaskName && (
             <div>
               <label className="text-sm font-medium text-gray-700 block mb-2">任务名称</label>
-              <input type="text" value={taskName} onChange={(e) => onTaskNameChange(e.target.value)}
-                placeholder="请输入任务名称" className="w-full px-3 py-2 border rounded-lg text-sm" />
+              <Input type="text" value={taskName} onChange={(e) => onTaskNameChange(e.target.value)}
+                placeholder="请输入任务名称" className="w-full" />
             </div>
           )}
 
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">任务类型</label>
-            <select value={category} onChange={(e) => onCategoryChange(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg text-sm">
-              <option value="">请选择</option>
-              <option value="营销">营销</option>
-              <option value="产数">产数</option>
-              <option value="云网">云网</option>
-              <option value="综合">综合</option>
-            </select>
+            <Select value={category} onValueChange={onCategoryChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="营销">营销</SelectItem>
+                <SelectItem value="产数">产数</SelectItem>
+                <SelectItem value="云网">云网</SelectItem>
+                <SelectItem value="综合">综合</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">状态</label>
-            <select value={status} onChange={(e) => onStatusChange(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg text-sm">
-              <option value="">请选择</option>
-              <option value="待审核">待审核</option>
-              <option value="待接单">待接单</option>
-              <option value="已接单">已接单</option>
-            </select>
+            <Select value={status} onValueChange={onStatusChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="请选择" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="待审核">待审核</SelectItem>
+                <SelectItem value="待接单">待接单</SelectItem>
+                <SelectItem value="已接单">已接单</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
             <label className="text-sm font-medium text-gray-700 block mb-2">发布时间</label>
             <div className="space-y-2">
-              <input type="date" value={startDate} onChange={(e) => onStartDateChange(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm" />
+              <Input type="date" value={startDate} onChange={(e) => onStartDateChange(e.target.value)}
+                className="w-full" />
               <div className="text-center text-xs text-gray-500">至</div>
-              <input type="date" value={endDate} onChange={(e) => onEndDateChange(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm" />
+              <Input type="date" value={endDate} onChange={(e) => onEndDateChange(e.target.value)}
+                className="w-full" />
             </div>
           </div>
         </div>
 
         <div className="p-4 border-t bg-white">
           <div className="flex gap-2">
-            <button onClick={handleReset} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">重置</button>
-            <button onClick={handleConfirm} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">确定</button>
+            <button onClick={handleReset} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm">重置</button>
+            <button onClick={handleConfirm} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm">确定</button>
           </div>
         </div>
       </div>
@@ -1397,7 +1406,7 @@ function ExpertTaskList({ tasks, onOpenDetail, onAction, filters, secondTab }: E
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={(e) => handleApplyClick(task, e)}
-                    className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                    className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-xl hover:bg-blue-600"
                   >
                     申请接单
                   </button>
@@ -1585,7 +1594,7 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
                       {memberExpandMap[task.id] && (
                         <div className="space-y-2 mt-2">
                           {(task.members || []).map((member) => (
-                            <div key={member.id} className="bg-gray-50 rounded-lg p-3 flex items-center justify-between">
+                            <div key={member.id} className="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
                               <div className="flex-1 min-w-0">
                                 <div className="text-sm font-medium text-gray-800 flex items-center gap-1">
                                   <span className="truncate">{member.name}</span>
@@ -1620,13 +1629,13 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
                   )}
                   {task.status === '待审核' && (
                     <div className="flex gap-2 pt-2">
-                      <button onClick={(e) => { e.stopPropagation(); setCancelConfirmTask(task); setCancelConfirmOpen(true); }} className="flex-1 py-2 text-sm bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50">撤单</button>
+                      <button onClick={(e) => { e.stopPropagation(); setCancelConfirmTask(task); setCancelConfirmOpen(true); }} className="flex-1 py-2 text-sm bg-white text-gray-700 rounded-xl border border-gray-300 hover:bg-gray-50">撤单</button>
                     </div>
                   )}
                   {task.status === '待接单' && (
                     <div className="flex gap-2 pt-2">
-                      <button onClick={(e) => { e.stopPropagation(); setCancelConfirmTask(task); setCancelConfirmOpen(true); }} className="flex-1 py-2 text-sm bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50">撤单</button>
-                      <button onClick={(e) => { e.stopPropagation(); onAction(task.id, 'invite'); }} className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600">派单</button>
+                      <button onClick={(e) => { e.stopPropagation(); setCancelConfirmTask(task); setCancelConfirmOpen(true); }} className="flex-1 py-2 text-sm bg-white text-gray-700 rounded-xl border border-gray-300 hover:bg-gray-50">撤单</button>
+                      <button onClick={(e) => { e.stopPropagation(); onAction(task.id, 'invite'); }} className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-xl hover:bg-blue-600">派单</button>
                     </div>
                   )}
                 </div>
@@ -1670,8 +1679,8 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
                   {task.startTime && task.endTime && <div className="text-xs text-gray-400">{task.startTime} 至 {task.endTime}</div>}
                   {task.status === '待接单' && task.source === 'dispatch' && (
                     <div className="flex gap-2 pt-2">
-                      <button onClick={(e) => handleAcceptClick(task, e)} className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600">接单</button>
-                      <button onClick={(e) => handleRejectClick(task, e)} className="flex-1 py-2 text-sm bg-white text-red-500 rounded-lg border border-red-500 hover:bg-red-50">拒绝</button>
+                      <button onClick={(e) => handleAcceptClick(task, e)} className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-xl hover:bg-blue-600">接单</button>
+                      <button onClick={(e) => handleRejectClick(task, e)} className="flex-1 py-2 text-sm bg-white text-red-500 rounded-xl border border-red-500 hover:bg-red-50">拒绝</button>
                     </div>
                   )}
                   {task.status === '待接单' && task.source === 'apply' && (
@@ -1683,7 +1692,7 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
                     <div className="flex gap-2 pt-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); onOpenSupplement({ id: task.id, name: task.taskName }); }}
-                        className="flex-1 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        className="flex-1 py-2 text-sm bg-green-500 text-white rounded-xl hover:bg-green-600"
                       >
                         补充信息
                       </button>
@@ -1728,13 +1737,13 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
                     <div className="flex gap-2 pt-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); onAction(task.id, 'approve'); }}
-                        className="flex-1 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        className="flex-1 py-2 text-sm bg-green-500 text-white rounded-xl hover:bg-green-600"
                       >
                         审核通过
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); onAction(task.id, 'reject'); }}
-                        className="flex-1 py-2 text-sm bg-white text-red-500 rounded-lg border border-red-500 hover:bg-red-50"
+                        className="flex-1 py-2 text-sm bg-white text-red-500 rounded-xl border border-red-500 hover:bg-red-50"
                       >
                         审核拒绝
                       </button>
@@ -1758,8 +1767,8 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
             </p>
           </div>
           <div className="flex gap-3">
-            <button onClick={() => setAcceptConfirmOpen(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-            <button onClick={handleAcceptConfirm} className="flex-1 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">确认接单</button>
+            <button onClick={() => setAcceptConfirmOpen(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+            <button onClick={handleAcceptConfirm} className="flex-1 py-2 text-white bg-blue-500 rounded-xl hover:bg-blue-600">确认接单</button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1775,8 +1784,8 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
             </p>
           </div>
           <div className="flex gap-3">
-            <button onClick={() => setRejectConfirmOpen(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-            <button onClick={handleRejectConfirm} className="flex-1 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600">确认拒绝</button>
+            <button onClick={() => setRejectConfirmOpen(false)} className="flex-1 py-2 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+            <button onClick={handleRejectConfirm} className="flex-1 py-2 text-white bg-red-500 rounded-xl hover:bg-red-600">确认拒绝</button>
           </div>
         </DialogContent>
       </Dialog>
@@ -1791,8 +1800,8 @@ function MyTaskList({ tasks, myPublishedTasks, onOpenDetail, onOpenSupplement, o
               确定要撤消任务<span className="font-medium text-gray-900 mx-1">「{cancelConfirmTask?.name}」</span>吗？
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setCancelConfirmOpen(false)} className="flex-1 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">取消</button>
-              <button onClick={handleCancelConfirm} className="flex-1 py-2.5 text-white bg-red-500 rounded-lg hover:bg-red-600">确认撤单</button>
+              <button onClick={() => setCancelConfirmOpen(false)} className="flex-1 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50">取消</button>
+              <button onClick={handleCancelConfirm} className="flex-1 py-2.5 text-white bg-red-500 rounded-xl hover:bg-red-600">确认撤单</button>
             </div>
           </div>
         </div>
@@ -1807,6 +1816,7 @@ export function ExpertTaskPool() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [myTasks, setMyTasks] = useState<DispatchItem[]>(mockMyTasks);
   const [mainTab, setMainTab] = useState<MainTabType>('专家任务池');
+  const [searchOpen, setSearchOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
@@ -2015,21 +2025,18 @@ export function ExpertTaskPool() {
       <div className="bg-white border-b sticky top-0 z-20">
         {/* 标题栏 */}
         <div className="px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate('/')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <h1 className="text-lg font-medium text-gray-900">专家任务</h1>
-          </div>
           <button
-            onClick={() => setPublishDialogOpen(true)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+            onClick={() => navigate('/')}
+            className="text-gray-600 hover:text-gray-800"
           >
-            <Plus className="w-4 h-4" />
-            发布任务
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">专家任务</h1>
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className={`p-2 rounded-xl transition-colors ${searchOpen ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+          >
+            <Search className="w-5 h-5" />
           </button>
         </div>
 
@@ -2106,25 +2113,38 @@ export function ExpertTaskPool() {
         )}
 
         {/* 搜索框 */}
-        <div className="px-4 py-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="搜索任务名称"
-              value={mainTab === '专家任务池' ? taskPoolFilters.taskName || '' : myTaskFilters.taskName || ''}
-              onChange={(e) => mainTab === '专家任务池'
-                ? setTaskPoolFilters({ ...taskPoolFilters, taskName: e.target.value })
-                : setMyTaskFilters({ ...myTaskFilters, taskName: e.target.value })
-              }
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50"
-            />
+        {searchOpen && (
+          <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="搜索任务名称"
+                value={mainTab === '专家任务池' ? taskPoolFilters.taskName || '' : myTaskFilters.taskName || ''}
+                onChange={(e) => mainTab === '专家任务池'
+                  ? setTaskPoolFilters({ ...taskPoolFilters, taskName: e.target.value })
+                  : setMyTaskFilters({ ...myTaskFilters, taskName: e.target.value })
+                }
+                className="w-full pl-10 pr-10"
+              />
+              {(mainTab === '专家任务池' ? taskPoolFilters.taskName : myTaskFilters.taskName) && (
+                <button
+                  onClick={() => mainTab === '专家任务池'
+                    ? setTaskPoolFilters({ ...taskPoolFilters, taskName: '' })
+                    : setMyTaskFilters({ ...myTaskFilters, taskName: '' })
+                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* 查询条件 - 专家任务池 */}
-        {mainTab === '专家任务池' && (
-          <div className="px-4 py-2 flex gap-2">
+        {mainTab === '专家任务池' && searchOpen && (
+          <div className="px-4 pb-3 flex flex-wrap gap-2">
             <button
               onClick={() => { setTaskPoolActiveFilter('category'); setTaskPoolTempFilters(taskPoolFilters); }}
               className={`flex-1 flex items-center justify-center gap-1 text-sm ${
@@ -2176,8 +2196,8 @@ export function ExpertTaskPool() {
         )}
 
         {/* 查询条件 - 我的任务单 */}
-        {mainTab === '我的任务单' && (
-          <div className="px-4 py-2 flex gap-2">
+        {mainTab === '我的任务单' && searchOpen && (
+          <div className="px-4 pb-3 flex flex-wrap gap-2">
             <button
               onClick={() => { setMyTaskActiveFilter('category'); setMyTaskTempFilters(myTaskFilters); }}
               className={`flex-1 flex items-center justify-center gap-1 text-sm ${
@@ -2301,7 +2321,7 @@ export function ExpertTaskPool() {
                   <button
                     key={cat || '全部'}
                     onClick={() => { setTaskPoolFilters({ ...taskPoolFilters, category: cat }); setTaskPoolActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       taskPoolFilters.category === cat
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2316,18 +2336,18 @@ export function ExpertTaskPool() {
             {mainTab === '专家任务池' && taskPoolActiveFilter === 'dispatchTime' && (
               <div className="space-y-4">
                 <div className="flex gap-2">
-                  <input
+                  <Input
                     type="date"
                     value={taskPoolTempFilters.startDate || ''}
                     onChange={(e) => setTaskPoolTempFilters({ ...taskPoolTempFilters, startDate: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    className="flex-1"
                   />
                   <span className="self-center text-gray-500">至</span>
-                  <input
+                  <Input
                     type="date"
                     value={taskPoolTempFilters.endDate || ''}
                     onChange={(e) => setTaskPoolTempFilters({ ...taskPoolTempFilters, endDate: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    className="flex-1"
                   />
                 </div>
                 <button
@@ -2335,7 +2355,7 @@ export function ExpertTaskPool() {
                     setTaskPoolFilters({ ...taskPoolFilters, dispatchTime: taskPoolTempFilters.startDate && taskPoolTempFilters.endDate ? `${taskPoolTempFilters.startDate}至${taskPoolTempFilters.endDate}` : '' });
                     setTaskPoolActiveFilter(null);
                   }}
-                  className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
                 >
                   确定
                 </button>
@@ -2348,7 +2368,7 @@ export function ExpertTaskPool() {
                   <button
                     key={expert.id}
                     onClick={() => { setTaskPoolFilters({ ...taskPoolFilters, expert: expert.name }); setTaskPoolActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       taskPoolFilters.expert === expert.name
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2366,7 +2386,7 @@ export function ExpertTaskPool() {
                   <button
                     key={region || '全部'}
                     onClick={() => { setTaskPoolFilters({ ...taskPoolFilters, region }); setTaskPoolActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       taskPoolFilters.region === region
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2384,7 +2404,7 @@ export function ExpertTaskPool() {
                   <button
                     key={status || '全部'}
                     onClick={() => { setTaskPoolFilters({ ...taskPoolFilters, status }); setTaskPoolActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       taskPoolFilters.status === status
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2403,7 +2423,7 @@ export function ExpertTaskPool() {
                   <button
                     key={cat || '全部'}
                     onClick={() => { setMyTaskFilters({ ...myTaskFilters, category: cat }); setMyTaskActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       myTaskFilters.category === cat
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2418,18 +2438,18 @@ export function ExpertTaskPool() {
             {mainTab === '我的任务单' && myTaskActiveFilter === 'dispatchTime' && (
               <div className="space-y-4">
                 <div className="flex gap-2">
-                  <input
+                  <Input
                     type="date"
                     value={myTaskTempFilters.startDate || ''}
                     onChange={(e) => setMyTaskTempFilters({ ...myTaskTempFilters, startDate: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    className="flex-1"
                   />
                   <span className="self-center text-gray-500">至</span>
-                  <input
+                  <Input
                     type="date"
                     value={myTaskTempFilters.endDate || ''}
                     onChange={(e) => setMyTaskTempFilters({ ...myTaskTempFilters, endDate: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+                    className="flex-1"
                   />
                 </div>
                 <button
@@ -2437,7 +2457,7 @@ export function ExpertTaskPool() {
                     setMyTaskFilters({ ...myTaskFilters, dispatchTime: myTaskTempFilters.startDate && myTaskTempFilters.endDate ? `${myTaskTempFilters.startDate}至${myTaskTempFilters.endDate}` : '' });
                     setMyTaskActiveFilter(null);
                   }}
-                  className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  className="w-full py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
                 >
                   确定
                 </button>
@@ -2450,7 +2470,7 @@ export function ExpertTaskPool() {
                   <button
                     key={expert.id}
                     onClick={() => { setMyTaskFilters({ ...myTaskFilters, expert: expert.name }); setMyTaskActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       myTaskFilters.expert === expert.name
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2468,7 +2488,7 @@ export function ExpertTaskPool() {
                   <button
                     key={status || '全部'}
                     onClick={() => { setMyTaskFilters({ ...myTaskFilters, status }); setMyTaskActiveFilter(null); }}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       myTaskFilters.status === status
                         ? 'bg-blue-50 text-blue-700 border border-blue-500'
                         : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
@@ -2482,6 +2502,15 @@ export function ExpertTaskPool() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* 右下角悬浮发布任务按钮 */}
+      <button
+        onClick={() => setPublishDialogOpen(true)}
+        className="fixed bottom-6 right-6 w-14 h-14 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 active:scale-95 transition-all z-30"
+        style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.4)' }}
+      >
+        <Plus className="w-7 h-7" />
+      </button>
     </div>
   );
 }

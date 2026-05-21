@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Search, MapPin, User, Calendar, FileText, X, ChevronLeft } from 'lucide-react';
+import { Search, MapPin, User, Calendar, FileText, X, ChevronLeft, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from './ui/dialog';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
 
 interface DispatchItem {
   id: string;
@@ -97,6 +99,7 @@ type FilterType = 'area' | 'expert' | 'status' | 'date';
 
 export function ExpertDispatchList() {
   const navigate = useNavigate();
+  const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     area: '',
@@ -174,82 +177,208 @@ export function ExpertDispatchList() {
     return false;
   };
 
+  const hasAnyFilter = () => {
+    return hasActiveFilter('area') || hasActiveFilter('expert') || hasActiveFilter('status') || hasActiveFilter('date');
+  };
+
+  const clearAllFilters = () => {
+    setFilters({ area: '', expertName: '', status: '', dateRange: { start: '', end: '' } });
+    setSearchQuery('');
+  };
+
+  const filterOptions = [
+    { key: 'area', label: '区域', options: areaOptions },
+    { key: 'expert', label: '专家名称', options: expertOptions },
+    { key: 'status', label: '派单状态', options: statusOptions },
+  ];
+
+  const handleFilterSelect = (key: string, value: string) => {
+    if (key === 'area') setFilters({ ...filters, area: value });
+    else if (key === 'expert') setFilters({ ...filters, expertName: value });
+    else if (key === 'status') setFilters({ ...filters, status: value });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="px-4 py-3">
-          <div className="flex items-center gap-3 mb-3">
-            <button
-              onClick={() => navigate('/')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <h1 className="text-lg font-medium text-gray-900 flex-1">专家派单列表</h1>
-          </div>
-          
-          {/* Search Bar */}
-          <div className="flex items-center bg-gray-100 rounded-lg px-4 py-3 mb-3">
-            <Search className="w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="搜索商机名称或专家名称"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent border-none outline-none ml-2 text-gray-700 placeholder:text-gray-400"
-            />
-          </div>
-
-          {/* Filter Buttons */}
-          <div className="flex gap-2 overflow-x-auto">
-            <button
-              onClick={() => openFilterDialog('area')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border ${
-                hasActiveFilter('area')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'bg-white border-gray-300 text-gray-700'
-              }`}
-            >
-              <MapPin className="w-4 h-4" />
-              {getFilterLabel('area')}
-            </button>
-            <button
-              onClick={() => openFilterDialog('expert')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border ${
-                hasActiveFilter('expert')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'bg-white border-gray-300 text-gray-700'
-              }`}
-            >
-              <User className="w-4 h-4" />
-              {getFilterLabel('expert')}
-            </button>
-            <button
-              onClick={() => openFilterDialog('status')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border ${
-                hasActiveFilter('status')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'bg-white border-gray-300 text-gray-700'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              {getFilterLabel('status')}
-            </button>
-            <button
-              onClick={() => openFilterDialog('date')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-sm whitespace-nowrap border ${
-                hasActiveFilter('date')
-                  ? 'bg-blue-50 border-blue-500 text-blue-700'
-                  : 'bg-white border-gray-300 text-gray-700'
-              }`}
-            >
-              <Calendar className="w-4 h-4" />
-              {getFilterLabel('date')}
-            </button>
-          </div>
+      <div className="bg-white border-b sticky top-0 z-20">
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={() => navigate('/')}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">专家派单列表</h1>
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className={`p-2 rounded-xl transition-colors ${searchOpen ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+          >
+            <Search className="w-5 h-5" />
+          </button>
         </div>
+
+        {/* 搜索框 */}
+        {searchOpen && (
+          <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="搜索商机名称或专家名称"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                >
+                  <X className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 筛选条件 */}
+        {searchOpen && (
+        <div className="px-4 pb-3 flex flex-wrap gap-2">
+          <button
+            onClick={() => openFilterDialog('area')}
+            className={`flex-1 flex items-center justify-center gap-1 text-sm ${
+              hasActiveFilter('area') ? 'text-blue-600' : 'text-gray-700'
+            }`}
+          >
+            {getFilterLabel('area')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          <button
+            onClick={() => openFilterDialog('expert')}
+            className={`flex-1 flex items-center justify-center gap-1 text-sm ${
+              hasActiveFilter('expert') ? 'text-blue-600' : 'text-gray-700'
+            }`}
+          >
+            {getFilterLabel('expert')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          <button
+            onClick={() => openFilterDialog('status')}
+            className={`flex-1 flex items-center justify-center gap-1 text-sm ${
+              hasActiveFilter('status') ? 'text-blue-600' : 'text-gray-700'
+            }`}
+          >
+            {getFilterLabel('status')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          <button
+            onClick={() => openFilterDialog('date')}
+            className={`flex-1 flex items-center justify-center gap-1 text-sm ${
+              hasActiveFilter('date') ? 'text-blue-600' : 'text-gray-700'
+            }`}
+          >
+            {getFilterLabel('date')}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          </button>
+        </div>
+        )}
       </div>
+
+      {/* 筛选下拉弹窗 */}
+      <Dialog open={activeFilter !== null} onOpenChange={closeFilterDialog}>
+          <DialogContent className="max-w-full w-full p-0 gap-0 bg-white rounded-t-2xl fixed bottom-0 top-auto left-0 right-0 translate-x-0 translate-y-0 h-auto max-h-[70vh] flex flex-col data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom border-0">
+            <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0">
+              <h2 className="text-lg font-medium flex-1 text-center">
+                {activeFilter === 'area' && '选择区域'}
+                {activeFilter === 'expert' && '选择专家'}
+                {activeFilter === 'status' && '选择状态'}
+                {activeFilter === 'date' && '选择日期'}
+              </h2>
+              <button onClick={closeFilterDialog} className="text-gray-400 hover:text-gray-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {activeFilter === 'area' && (
+                <div className="space-y-2">
+                  {areaOptions.map((area) => (
+                    <button
+                      key={area}
+                      onClick={() => { setFilters({ ...filters, area }); closeFilterDialog(); }}
+                      className={`w-full py-3 px-4 rounded-xl text-left ${
+                        filters.area === area ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {area}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {activeFilter === 'expert' && (
+                <div className="space-y-2">
+                  {expertOptions.map((expert) => (
+                    <button
+                      key={expert}
+                      onClick={() => { setFilters({ ...filters, expertName: expert }); closeFilterDialog(); }}
+                      className={`w-full py-3 px-4 rounded-xl text-left ${
+                        filters.expertName === expert ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {expert}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {activeFilter === 'status' && (
+                <div className="space-y-2">
+                  {statusOptions.map((status) => (
+                    <button
+                      key={status.value}
+                      onClick={() => { setFilters({ ...filters, status: status.value }); closeFilterDialog(); }}
+                      className={`w-full py-3 px-4 rounded-xl text-left ${
+                        filters.status === status.value ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {status.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {activeFilter === 'date' && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm text-gray-500 mb-2 block">开始日期</label>
+                    <Input
+                      type="date"
+                      value={tempFilters.dateRange.start}
+                      onChange={(e) => setTempFilters({ ...tempFilters, dateRange: { ...tempFilters.dateRange, start: e.target.value } })}
+                      className="w-full px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-500 mb-2 block">结束日期</label>
+                    <Input
+                      type="date"
+                      value={tempFilters.dateRange.end}
+                      onChange={(e) => setTempFilters({ ...tempFilters, dateRange: { ...tempFilters.dateRange, end: e.target.value } })}
+                      className="w-full px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-3 px-6 py-4 border-t bg-white flex-shrink-0">
+              <button onClick={resetCurrentFilter} className="flex-1 py-2.5 text-sm bg-gray-500 hover:bg-gray-600 text-white rounded-xl">
+                重置
+              </button>
+              <button onClick={confirmFilter} className="flex-1 py-3 text-white bg-blue-500 rounded-xl hover:bg-blue-600">
+                确定
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
       {/* Dispatch List */}
       <div className="p-4 space-y-4">
@@ -257,9 +386,9 @@ export function ExpertDispatchList() {
           <div className="text-center py-12 text-gray-400">暂无派单信息</div>
         ) : (
           filteredData.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg p-4 shadow-sm">
+            <div key={item.id} className="bg-white rounded-xl shadow-sm">
               {/* Header */}
-              <div className="flex items-start justify-between mb-3">
+              <div className="p-4 flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h3 className="text-gray-900 font-medium mb-1">{item.opportunityName}</h3>
                   <div className="text-sm text-gray-500">编码：{item.opportunityCode}</div>
@@ -274,11 +403,11 @@ export function ExpertDispatchList() {
               </div>
 
               {/* Info Grid */}
-              <div className="space-y-2 text-sm">
+              <div className="px-4 pb-4 space-y-2 text-sm">
                 <div className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
                   <div className="flex-1">
-                    <span className="text-gray-600">支局：</span>
+                    <span className="text-gray-500">支局：</span>
                     <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded ml-1">
                       {item.branchName}
                     </span>
@@ -286,45 +415,45 @@ export function ExpertDispatchList() {
                 </div>
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-600">派单人：</span>
+                  <span className="text-gray-500">派单人：</span>
                   <span className="text-gray-900">{item.dispatchPerson}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-600">派单专家：</span>
+                  <span className="text-gray-500">派单专家：</span>
                   <span className="text-gray-900">{item.expertName}</span>
                 </div>
-                <div className="text-gray-600">
+                <div className="text-gray-500">
                   客户名称：<span className="text-gray-900">{item.customerName}</span>
                 </div>
-                <div className="text-gray-600">
+                <div className="text-gray-500">
                   客户地址：<span className="text-gray-900">{item.customerAddress}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-600">创建时间：</span>
+                  <span className="text-gray-500">创建时间：</span>
                   <span className="text-gray-900">{item.createTime}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  <span className="text-gray-600">派单时间：</span>
+                  <span className="text-gray-500">派单时间：</span>
                   <span className="text-gray-900">{item.dispatchTime}</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 mt-4 pt-3 border-t">
+              <div className="px-4 pb-4 flex gap-2 border-t pt-4">
                 {item.status === 'pending' && (
                   <>
                     <button
                       onClick={() => handleAction(item.id, 'accept')}
-                      className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-lg border-0 hover:bg-blue-600"
+                      className="flex-1 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
                     >
                       接单
                     </button>
                     <button
                       onClick={() => handleAction(item.id, 'reject')}
-                      className="flex-1 py-2 text-sm bg-white text-red-500 rounded-lg border border-red-500 hover:bg-red-50"
+                      className="flex-1 py-1.5 text-xs bg-red-500 hover:bg-red-600 text-white rounded-xl transition-colors"
                     >
                       拒绝
                     </button>
@@ -333,7 +462,7 @@ export function ExpertDispatchList() {
                 {item.status === 'accepted' && (
                   <button
                     onClick={() => handleAction(item.id, 'cancel')}
-                    className="flex-1 py-2 text-sm bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50"
+                    className="flex-1 py-1.5 text-xs bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors"
                   >
                     撤销
                   </button>
@@ -341,13 +470,13 @@ export function ExpertDispatchList() {
                 {item.status === 'rejected' && (
                   <button
                     onClick={() => handleAction(item.id, 'accept')}
-                    className="flex-1 py-2 text-sm bg-blue-500 text-white rounded-lg border-0 hover:bg-blue-600"
+                    className="flex-1 py-1.5 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
                   >
                     重新接单
                   </button>
                 )}
                 {item.status === 'visited' && (
-                  <div className="flex-1 py-2 text-sm text-center text-gray-400">
+                  <div className="flex-1 py-2.5 text-sm text-center text-gray-400 bg-gray-100 rounded-xl">
                     已完成走访
                   </div>
                 )}
@@ -393,10 +522,10 @@ export function ExpertDispatchList() {
                   <button
                     key={area}
                     onClick={() => setTempFilters({ ...tempFilters, area })}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       tempFilters.area === area
-                        ? 'bg-blue-50 text-blue-700 border border-blue-500'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
                     {area}
@@ -412,10 +541,10 @@ export function ExpertDispatchList() {
                   <button
                     key={expert}
                     onClick={() => setTempFilters({ ...tempFilters, expertName: expert })}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       tempFilters.expertName === expert
-                        ? 'bg-blue-50 text-blue-700 border border-blue-500'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
                     {expert}
@@ -431,10 +560,10 @@ export function ExpertDispatchList() {
                   <button
                     key={status.value}
                     onClick={() => setTempFilters({ ...tempFilters, status: status.value })}
-                    className={`w-full py-3 px-4 rounded-lg text-left transition-colors ${
+                    className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
                       tempFilters.status === status.value
-                        ? 'bg-blue-50 text-blue-700 border border-blue-500'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
                     {status.label}
@@ -447,8 +576,8 @@ export function ExpertDispatchList() {
             {activeFilter === 'date' && (
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-600 mb-2 block">开始日期</label>
-                  <input
+                  <label className="text-sm text-gray-500 mb-2 block">开始日期</label>
+                  <Input
                     type="date"
                     value={tempFilters.dateRange.start}
                     onChange={(e) =>
@@ -457,12 +586,12 @@ export function ExpertDispatchList() {
                         dateRange: { ...tempFilters.dateRange, start: e.target.value },
                       })
                     }
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600 mb-2 block">结束日期</label>
-                  <input
+                  <label className="text-sm text-gray-500 mb-2 block">结束日期</label>
+                  <Input
                     type="date"
                     value={tempFilters.dateRange.end}
                     onChange={(e) =>
@@ -471,7 +600,7 @@ export function ExpertDispatchList() {
                         dateRange: { ...tempFilters.dateRange, end: e.target.value },
                       })
                     }
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -482,13 +611,13 @@ export function ExpertDispatchList() {
           <div className="flex items-center gap-3 px-6 py-4 border-t bg-white flex-shrink-0">
             <button
               onClick={resetCurrentFilter}
-              className="flex-1 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-colors"
             >
               重置
             </button>
             <button
               onClick={confirmFilter}
-              className="flex-1 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+              className="flex-1 py-3 text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-colors"
             >
               确定
             </button>

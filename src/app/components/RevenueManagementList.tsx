@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   ChevronLeft, Search, Filter, X, ChevronDown, ChevronUp,
-  Plus, Copy, DollarSign, ChevronRight, RefreshCw,
-  CheckCircle, AlertTriangle, FileText, Upload, ExternalLink
+  Plus, DollarSign
 } from 'lucide-react';
+import { Input } from './ui/input';
 
 // 录收记录类型
 interface RevenueRecord {
@@ -202,6 +202,22 @@ const approvalStatusConfig: Record<string, { bg: string; text: string }> = {
   '审核驳回': { bg: 'bg-red-50', text: 'text-red-600' },
 };
 
+// 序号标签
+const IndexBadge = ({ index }: { index: number }) => (
+  <span className="w-5 h-5 bg-blue-100 text-blue-600 rounded-xl text-xs flex items-center justify-center font-medium">
+    {index}
+  </span>
+);
+
+// 正方形标签
+const SquareTag = ({ top, bottom, color = 'purple' }: { top: string; bottom: string; color?: string }) => (
+  <div className={`flex flex-col items-center justify-center w-8 h-8 rounded text-xs leading-tight bg-${color}-50 text-${color}-600`}>
+    {top}
+    <span className={`border-t border-${color}-200 my-0.5 w-full`} />
+    {bottom}
+  </div>
+);
+
 export function RevenueManagementList() {
   const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
@@ -240,7 +256,7 @@ export function RevenueManagementList() {
         <div className="flex items-center px-4 h-14">
           <button
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 -ml-2 hover:bg-gray-100 rounded-xl transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>
@@ -253,12 +269,12 @@ export function RevenueManagementList() {
         <div className="px-4 pb-3 flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
+            <Input
               type="text"
               placeholder="搜索商机名称、编码、项目..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-10 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border-transparent"
             />
             {searchText && (
               <button
@@ -322,7 +338,7 @@ export function RevenueManagementList() {
           return (
             <div
               key={record.id}
-              className="bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-200"
+              className="bg-white rounded-xl shadow-sm overflow-hidden transition-all duration-200"
             >
               {/* 主卡片内容 */}
               <div className="p-4">
@@ -335,7 +351,7 @@ export function RevenueManagementList() {
                     <p className="text-xs text-gray-400 mt-0.5">{record.projectCode}</p>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${statusStyle.bg} ${statusStyle.text}`}>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-xl ${statusStyle.bg} ${statusStyle.text}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`}></span>
                       {record.status}
                     </span>
@@ -406,22 +422,30 @@ export function RevenueManagementList() {
                               >
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
-                                    <span className="w-5 h-5 bg-blue-100 text-blue-600 rounded-full text-xs flex items-center justify-center font-medium">
-                                      {approval.index}
-                                    </span>
+                                    <IndexBadge index={approval.index} />
                                     <span className="text-sm font-medium text-gray-900">{approval.name}</span>
-                                    <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
                                   </div>
-                                  <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-green-600">¥{approval.amount}</span>
+                                </div>
+                                <div className="flex items-center gap-3 mb-2 pl-7">
+                                  {approval.eipStatus === '审核通过' ? (
+                                    <SquareTag top="审核" bottom="通过" color="green" />
+                                  ) : (
                                     <span className={`text-xs px-2 py-0.5 rounded-full ${apStatus.bg} ${apStatus.text}`}>
                                       {approval.eipStatus}
                                     </span>
-                                    <span className="text-sm font-medium text-green-600">¥{approval.amount}</span>
+                                  )}
+                                  <div className="flex flex-col gap-1">
+                                    <div className="text-xs text-gray-500">EIP文号: {approval.eipNumber}</div>
+                                    <div className="text-xs text-gray-500">同步时间: {approval.syncEipTime}</div>
                                   </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-1 text-xs text-gray-500 pl-7">
-                                  <div>EIP文号: {approval.eipNumber}</div>
-                                  <div>同步时间: {approval.syncEipTime}</div>
+                                <div className="flex items-center gap-3 pl-7">
+                                  <SquareTag top="同步" bottom="3.0" color="purple" />
+                                  <div className="flex flex-col gap-1">
+                                    <div className="text-xs text-gray-500">预售理单号: {approval.presaleOrderNo}</div>
+                                    <div className="text-xs text-gray-500">同步时间: {approval.sync30Time}</div>
+                                  </div>
                                 </div>
                               </button>
                             );
@@ -454,15 +478,16 @@ export function RevenueManagementList() {
                       <div className="pb-3 space-y-2">
                         {record.otherChannelList && record.otherChannelList.length > 0 ? (
                           record.otherChannelList.map((item) => (
-                            <div key={item.id} className="bg-gray-50 rounded-xl p-3">
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-sm font-medium text-gray-900">{item.productRevenue}</span>
+                            <div key={item.id} className="bg-gray-50 rounded-xl p-3 text-left">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <IndexBadge index={item.index} />
+                                  <span className="text-sm font-medium text-gray-900">{item.productRevenue}</span>
+                                </div>
                                 <span className="text-sm font-medium text-green-600">¥{item.amountWithoutTax}</span>
                               </div>
-                              <div className="grid grid-cols-2 gap-1 text-xs text-gray-500">
-                                <div>合同: {item.contractCode}</div>
-                                <div>账期: {item.billingPeriod}</div>
-                              </div>
+                              <div className="text-xs text-gray-500 pl-7">合同: {item.contractCode}</div>
+                              <div className="text-xs text-gray-500 pl-7 mt-1">账期: {item.billingPeriod}</div>
                             </div>
                           ))
                         ) : (

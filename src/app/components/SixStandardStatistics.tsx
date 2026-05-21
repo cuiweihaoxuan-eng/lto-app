@@ -210,7 +210,7 @@ export function SixStandardStatistics() {
   const provinceAvg = citySixData.reduce((s, c) => s + calcCityRate(c), 0) / citySixData.length;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#EFF4FC]">
+    <div className="relative w-full h-screen overflow-hidden bg-blue-50">
       {/* ===== 全屏地图 ===== */}
       <div className="absolute inset-0 z-0">
         {loading ? (

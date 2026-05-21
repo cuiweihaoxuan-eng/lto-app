@@ -157,7 +157,7 @@ export function RevenueDetail() {
         <div className="flex items-center px-4 h-14">
           <button
             onClick={() => navigate(-1)}
-            className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 -ml-2 hover:bg-gray-100 rounded-xl transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>

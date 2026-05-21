@@ -6,6 +6,9 @@ import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
 import { UploadDialog } from './UploadDialog';
 import { AddBidDialog } from './AddBidDialog';
+import { Input } from './ui/input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
+import { Textarea } from './ui/textarea';
 
 // ===== Mock 数据 =====
 
@@ -308,7 +311,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="font-medium text-gray-900">{categoryName}</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="bg-white rounded-lg divide-y">
+          <div className="bg-white rounded-xl shadow-sm divide-y">
             {[
               { label: '客户名称', value: mockCustomerArchive.customerName },
               { label: '注册地址', value: mockCustomerArchive.address },
@@ -342,7 +345,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {mockVisitRecords.map((record) => (
-            <div key={record.id} className="bg-white rounded-lg p-4 space-y-2">
+            <div key={record.id} className="bg-white rounded-xl p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-gray-400">#{record.id}</span>
                 <span className="text-xs text-gray-500">{record.date}</span>
@@ -388,7 +391,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="font-medium text-gray-900">{categoryName}</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="bg-white rounded-lg divide-y">
+          <div className="bg-white rounded-xl shadow-sm divide-y">
             {[
               { label: '商机名称', value: mockOpportunity.opportunityName },
               { label: '商机集团编码', value: mockOpportunity.opportunityCode },
@@ -417,7 +420,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {mockThreeYearProjects.map((project) => (
-            <div key={project.id} className="bg-white rounded-lg p-4 space-y-1.5">
+            <div key={project.id} className="bg-white rounded-xl p-4 space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-gray-500">合同名称</span>
                 <span className="text-gray-900 text-right max-w-[60%] text-right">{project.contractName}</span>
@@ -454,7 +457,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {mockTeamMembers.map((member) => (
-            <div key={member.id} className="bg-white rounded-lg p-4 space-y-1.5">
+            <div key={member.id} className="bg-white rounded-xl p-4 space-y-1.5">
               <div className="flex items-center gap-2 mb-2">
                 <span className={`text-xs px-1.5 py-0.5 rounded ${
                   member.roleType === '第一责任人' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'
@@ -499,7 +502,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="font-medium text-gray-900">{categoryName}</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">方案解构</div>
             <div className="space-y-2">
               {[
@@ -512,7 +515,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">中台把关</div>
             <div className="space-y-2">
               {[
@@ -525,7 +528,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-gray-700">把关结果</span>
               <span className="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-600 rounded">待把关</span>
@@ -554,41 +557,28 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-xl p-4 space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">是否应标 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.biddingType || ''}
-                onChange={(e) => setFormData({ ...formData, biddingType: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.biddingType || ''} onValueChange={(value) => setFormData({ ...formData, biddingType: value })}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">投标时间 <span className="text-red-500">*</span></label>
-              <input
-                type="date"
-                value={formData.biddingTime || ''}
-                onChange={(e) => setFormData({ ...formData, biddingTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.biddingTime || ''} onChange={(e) => setFormData({ ...formData, biddingTime: e.target.value })} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">投标主体 <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                placeholder="请输入投标主体"
-                value={formData.biddingSubject || ''}
-                onChange={(e) => setFormData({ ...formData, biddingSubject: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入投标主体" value={formData.biddingSubject || ''} onChange={(e) => setFormData({ ...formData, biddingSubject: e.target.value })} className="w-full" />
             </div>
           </div>
           {/* 招标文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">招标文件</span>
@@ -612,7 +602,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 投标依据标书 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">投标依据/标书</span>
@@ -636,7 +626,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 发标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">发标证明文件</span>
@@ -659,7 +649,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 投标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">投标证明文件</span>
@@ -682,7 +672,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 投标报价清单 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">投标报价清单</span>
@@ -705,7 +695,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 弃标证明文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">弃标证明文件</span>
@@ -758,55 +748,36 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-xl p-4 space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">应标结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.bidWinResult || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinResult: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="中标">中标</option>
-                <option value="丢标">丢标</option>
-                <option value="未开标">未开标</option>
-                <option value="已签约">已签约</option>
-                <option value="未签约">未签约</option>
-                <option value="弃标">弃标</option>
-              </select>
+              <Select value={formData.bidWinResult || ''} onValueChange={(value) => setFormData({ ...formData, bidWinResult: value })}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="中标">中标</SelectItem>
+                  <SelectItem value="丢标">丢标</SelectItem>
+                  <SelectItem value="未开标">未开标</SelectItem>
+                  <SelectItem value="已签约">已签约</SelectItem>
+                  <SelectItem value="未签约">未签约</SelectItem>
+                  <SelectItem value="弃标">弃标</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">中标时间</label>
-              <input
-                type="date"
-                value={formData.bidWinTime || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.bidWinTime || ''} onChange={(e) => setFormData({ ...formData, bidWinTime: e.target.value })} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">中标金额（万元）</label>
-              <input
-                type="number"
-                placeholder="请输入"
-                value={formData.bidWinAmount || ''}
-                onChange={(e) => setFormData({ ...formData, bidWinAmount: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="number" placeholder="请输入" value={formData.bidWinAmount || ''} onChange={(e) => setFormData({ ...formData, bidWinAmount: e.target.value })} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">签约对象</label>
-              <input
-                type="text"
-                placeholder="请输入"
-                value={formData.signObject || ''}
-                onChange={(e) => setFormData({ ...formData, signObject: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入" value={formData.signObject || ''} onChange={(e) => setFormData({ ...formData, signObject: e.target.value })} className="w-full" />
             </div>
           </div>
           {/* 中标结果通知书 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">中标结果通知书</span>
@@ -829,7 +800,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 丢标复盘文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">丢标复盘文件</span>
@@ -881,29 +852,18 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-xl p-4 space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">谈判记录 <span className="text-red-500">*</span></label>
-              <textarea
-                placeholder="请输入谈判记录内容"
-                value={formData.negotiationRecord || ''}
-                onChange={(e) => setFormData({ ...formData, negotiationRecord: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={4}
-              />
+              <Textarea placeholder="请输入谈判记录内容" value={formData.negotiationRecord || ''} onChange={(e) => setFormData({ ...formData, negotiationRecord: e.target.value })} className="w-full" rows={4} />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">谈判时间 <span className="text-red-500">*</span></label>
-              <input
-                type="date"
-                value={formData.negotiationTime || ''}
-                onChange={(e) => setFormData({ ...formData, negotiationTime: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.negotiationTime || ''} onChange={(e) => setFormData({ ...formData, negotiationTime: e.target.value })} className="w-full" />
             </div>
           </div>
           {/* 谈判记录上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">谈判记录上传</span>
@@ -949,7 +909,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {/* 合同附件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">合同附件</span>
@@ -972,7 +932,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 报价清单 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">报价清单</span>
@@ -995,7 +955,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 图纸 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">图纸</span>
@@ -1018,7 +978,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 合同信息列表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">合同信息列表</div>
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
@@ -1063,7 +1023,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {/* 标前决策会议决议上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">标前决策会议决议</span>
@@ -1086,7 +1046,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 模式会会议纪要 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">模式会会议纪要</span>
@@ -1109,7 +1069,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 总经理办公会纪要 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">总经理办公会纪要</span>
@@ -1151,32 +1111,24 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="text-xs px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded">省内六到位要求</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-xl p-4 space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">业务解构完成 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.deconstructComplete || ''}
-                onChange={(e) => setFormData({ ...formData, deconstructComplete: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.deconstructComplete || ''} onValueChange={(value) => setFormData({ ...formData, deconstructComplete: value })}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">解构结果说明</label>
-              <textarea
-                placeholder="请输入业务解构结果说明"
-                value={formData.deconstructResult || ''}
-                onChange={(e) => setFormData({ ...formData, deconstructResult: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入业务解构结果说明" value={formData.deconstructResult || ''} onChange={(e) => setFormData({ ...formData, deconstructResult: e.target.value })} className="w-full" rows={3} />
             </div>
           </div>
           {/* 采购需求表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">采购需求表</span>
@@ -1199,7 +1151,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 采购需求表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">采购需求表</div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs min-w-[500px]">
@@ -1235,7 +1187,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             </div>
           </div>
           {/* 采购方案 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">采购方案</span>
@@ -1258,7 +1210,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 采购方案表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">采购方案表</div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs min-w-[500px]">
@@ -1286,7 +1238,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             </div>
           </div>
           {/* 采购结果 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">采购结果</span>
@@ -1309,7 +1261,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 采购结果表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">采购结果表</div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs min-w-[500px]">
@@ -1358,7 +1310,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {/* 后向招标文件 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">后向招标文件</span>
@@ -1381,7 +1333,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 中标报价清单 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">中标报价清单</span>
@@ -1404,7 +1356,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 后向合同(报价清单) */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">后向合同(报价清单)</span>
@@ -1427,7 +1379,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 合同附件/集采订单 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">合同附件/集采订单</span>
@@ -1450,7 +1402,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 后向合同(图纸) */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">后向合同(图纸)</span>
@@ -1473,7 +1425,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 后向列表 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">后向列表</div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs min-w-[600px]">
@@ -1503,7 +1455,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             </div>
           </div>
           {/* 后向厂家相关合同 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="text-xs font-medium text-gray-700 mb-3">后向厂家相关合同</div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs min-w-[600px]">
@@ -1548,7 +1500,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {/* 变更内容上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">变更内容</span>
@@ -1571,7 +1523,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
             ) : <p className="text-xs text-gray-400">暂未上传</p>}
           </div>
           {/* 变更审核上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">变更审核</span>
@@ -1607,7 +1559,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {/* 商机是否建档上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">商机是否建档</span>
@@ -1643,34 +1595,26 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           <span className="font-medium text-gray-900">{categoryName}</span>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <div className="bg-white rounded-lg p-4 space-y-3">
+          <div className="bg-white rounded-xl p-4 space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">服务界面类型 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.serviceDeskType || ''}
-                onChange={(e) => setFormData({ ...formData, serviceDeskType: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="电话">电话</option>
-                <option value="在线">在线</option>
-                <option value="电话+在线">电话+在线</option>
-                <option value="暂无">暂无</option>
-              </select>
+              <Select value={formData.serviceDeskType || ''} onValueChange={(value) => setFormData({ ...formData, serviceDeskType: value })}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="请选择" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="电话">电话</SelectItem>
+                  <SelectItem value="在线">在线</SelectItem>
+                  <SelectItem value="电话+在线">电话+在线</SelectItem>
+                  <SelectItem value="暂无">暂无</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">服务记录说明</label>
-              <textarea
-                placeholder="请输入服务界面记录说明"
-                value={formData.serviceDeskRecord || ''}
-                onChange={(e) => setFormData({ ...formData, serviceDeskRecord: e.target.value })}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入服务界面记录说明" value={formData.serviceDeskRecord || ''} onChange={(e) => setFormData({ ...formData, serviceDeskRecord: e.target.value })} className="w-full" rows={3} />
             </div>
           </div>
           {/* 电话或在线台席项目记录上传 */}
-          <div className="bg-white rounded-lg p-4">
+          <div className="bg-white rounded-xl p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium text-gray-700">电话或在线台席项目记录</span>
@@ -1722,7 +1666,7 @@ function ContentPanel({ categoryId, categoryName, onClose, allFiles, onFilesChan
           {config.uploadFields.map((field) => {
             const files = allFiles[field] || [];
             return (
-              <div key={field} className="bg-white rounded-lg p-4 space-y-2">
+              <div key={field} className="bg-white rounded-xl p-4 shadow-sm">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-gray-700">{field}</span>
                   <Button
@@ -1864,7 +1808,7 @@ export function SixStandardDetail() {
       </div>
 
       {/* Progress Summary */}
-      <div className="bg-white mx-4 mt-4 rounded-lg p-4 shadow-sm">
+      <div className="bg-white mx-4 mt-4 rounded-xl shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <span className="text-gray-700">完成进度</span>
           <span className="text-blue-600 font-medium">{completedCount}/{totalCount}</span>
@@ -1890,7 +1834,7 @@ export function SixStandardDetail() {
           const moduleProgress = (moduleCompletedCount / moduleTotalCount) * 100;
 
           return (
-            <div key={module.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div key={module.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
               {/* Module Header */}
               <div
                 className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
@@ -1967,7 +1911,7 @@ export function SixStandardDetail() {
                 {selectedRule?.completed ? '已点亮' : '未点亮'}
               </span>
             </div>
-            <div className="p-3 bg-blue-50 rounded-lg">
+            <div className="p-3 bg-blue-50 rounded-xl">
               <div className="text-sm text-gray-700">{selectedRule?.rule}</div>
             </div>
           </div>

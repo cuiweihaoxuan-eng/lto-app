@@ -1,5 +1,6 @@
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Search } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { Input } from './ui/input';
 import notificationImage from 'figma:asset/303f0bbcff00ae087df0c3b55151472c7a91f651.png';
 
 interface NotificationItem {
@@ -66,23 +67,33 @@ export function NotificationList() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-10">
-        <div className="px-4 py-4 flex items-center gap-3">
-          <button
-            onClick={() => navigate('/')}
-            className="text-gray-600 hover:text-gray-800"
-          >
+      <div className="bg-white border-b sticky top-0 z-20">
+        {/* 标题栏 */}
+        <div className="px-4 py-3 flex items-center justify-between">
+          <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-800">
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-medium text-gray-900 flex-1">工作通知·浙江电信</h1>
+          <h1 className="text-lg font-medium text-gray-900 flex-1 text-center mr-6">工作通知·浙江电信</h1>
           <span className="text-sm text-gray-500">99+</span>
+        </div>
+
+        {/* 搜索框 */}
+        <div className="px-4 pt-2 pb-3 flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="搜索通知内容"
+              className="pl-10 pr-4 py-2 bg-gray-100"
+            />
+          </div>
         </div>
       </div>
 
       {/* Notification List */}
       <div className="p-4 space-y-4">
         {mockNotifications.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div key={item.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
             {/* Image Section */}
             <div className="flex items-center justify-center bg-gray-100 p-8">
               <img

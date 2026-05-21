@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from './ui/select';
 import { UploadDialog } from './UploadDialog';
 
 type FormType =
@@ -100,34 +102,23 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">是否应标 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.biddingType || ''}
-                onChange={(e) => handleChange('biddingType', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.biddingType || ''} onValueChange={(v) => handleChange('biddingType', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">投标时间 <span className="text-red-500">*</span></label>
-              <input
-                type="date"
-                value={formData.biddingTime || ''}
-                onChange={(e) => handleChange('biddingTime', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.biddingTime || ''} onChange={(e) => handleChange('biddingTime', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">投标主体 <span className="text-red-500">*</span></label>
-              <input
-                type="text"
-                placeholder="请输入投标主体"
-                value={formData.biddingSubject || ''}
-                onChange={(e) => handleChange('biddingSubject', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入投标主体" value={formData.biddingSubject || ''} onChange={(e) => handleChange('biddingSubject', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">投标相关文件</label>
@@ -146,48 +137,31 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">应标结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.bidWinResult || ''}
-                onChange={(e) => handleChange('bidWinResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="中标">中标</option>
-                <option value="丢标">丢标</option>
-                <option value="未开标">未开标</option>
-                <option value="已签约">已签约</option>
-                <option value="未签约">未签约</option>
-                <option value="弃标">弃标</option>
-              </select>
+              <Select value={formData.bidWinResult || ''} onValueChange={(v) => handleChange('bidWinResult', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="中标">中标</SelectItem>
+                  <SelectItem value="丢标">丢标</SelectItem>
+                  <SelectItem value="未开标">未开标</SelectItem>
+                  <SelectItem value="已签约">已签约</SelectItem>
+                  <SelectItem value="未签约">未签约</SelectItem>
+                  <SelectItem value="弃标">弃标</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">中标时间</label>
-              <input
-                type="date"
-                value={formData.bidWinTime || ''}
-                onChange={(e) => handleChange('bidWinTime', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.bidWinTime || ''} onChange={(e) => handleChange('bidWinTime', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">中标金额（万元）</label>
-              <input
-                type="number"
-                placeholder="请输入"
-                value={formData.bidWinAmount || ''}
-                onChange={(e) => handleChange('bidWinAmount', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="number" placeholder="请输入" value={formData.bidWinAmount || ''} onChange={(e) => handleChange('bidWinAmount', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">签约对象</label>
-              <input
-                type="text"
-                placeholder="请输入"
-                value={formData.signObject || ''}
-                onChange={(e) => handleChange('signObject', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入" value={formData.signObject || ''} onChange={(e) => handleChange('signObject', e.target.value)} className="w-full" />
             </div>
           </div>
         );
@@ -197,26 +171,20 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">谈判记录 <span className="text-red-500">*</span></label>
-              <textarea
-                placeholder="请输入谈判记录内容"
-                value={formData.negotiationRecord || ''}
-                onChange={(e) => handleChange('negotiationRecord', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={4}
-              />
+              <Textarea placeholder="请输入谈判记录内容" value={formData.negotiationRecord || ''} onChange={(e) => handleChange('negotiationRecord', e.target.value)} className="w-full" rows={4} />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">谈判结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.negotiationResult || ''}
-                onChange={(e) => handleChange('negotiationResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="达成合作">达成合作</option>
-                <option value="继续洽谈">继续洽谈</option>
-                <option value="未达成">未达成</option>
-              </select>
+              <Select value={formData.negotiationResult || ''} onValueChange={(v) => handleChange('negotiationResult', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="达成合作">达成合作</SelectItem>
+                  <SelectItem value="继续洽谈">继续洽谈</SelectItem>
+                  <SelectItem value="未达成">未达成</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         );
@@ -226,46 +194,29 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">决策会名称</label>
-              <input
-                type="text"
-                placeholder="请输入决策会名称"
-                value={formData.decisionName || ''}
-                onChange={(e) => handleChange('decisionName', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入决策会名称" value={formData.decisionName || ''} onChange={(e) => handleChange('decisionName', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">决策时间</label>
-              <input
-                type="date"
-                value={formData.decisionTime || ''}
-                onChange={(e) => handleChange('decisionTime', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.decisionTime || ''} onChange={(e) => handleChange('decisionTime', e.target.value)} className="w-full" />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">决策结果</label>
-              <select
-                value={formData.decisionResult || ''}
-                onChange={(e) => handleChange('decisionResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="通过">通过</option>
-                <option value="不通过">不通过</option>
-                <option value="暂缓">暂缓</option>
-                <option value="需要补充材料">需要补充材料</option>
-              </select>
+              <Select value={formData.decisionResult || ''} onValueChange={(v) => handleChange('decisionResult', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="通过">通过</SelectItem>
+                  <SelectItem value="不通过">不通过</SelectItem>
+                  <SelectItem value="暂缓">暂缓</SelectItem>
+                  <SelectItem value="需要补充材料">需要补充材料</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">预计合作伙伴</label>
-              <input
-                type="text"
-                placeholder="请输入合作伙伴名称"
-                value={formData.partnerName || ''}
-                onChange={(e) => handleChange('partnerName', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="text" placeholder="请输入合作伙伴名称" value={formData.partnerName || ''} onChange={(e) => handleChange('partnerName', e.target.value)} className="w-full" />
             </div>
           </div>
         );
@@ -275,25 +226,19 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">业务解构完成 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.deconstructComplete || ''}
-                onChange={(e) => handleChange('deconstructComplete', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.deconstructComplete || ''} onValueChange={(v) => handleChange('deconstructComplete', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">解构结果说明</label>
-              <textarea
-                placeholder="请输入业务解构结果说明"
-                value={formData.deconstructResult || ''}
-                onChange={(e) => handleChange('deconstructResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入业务解构结果说明" value={formData.deconstructResult || ''} onChange={(e) => handleChange('deconstructResult', e.target.value)} className="w-full" rows={3} />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">采购需求表或方案</label>
@@ -309,15 +254,15 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">方案解构完成 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.deconstructComplete || ''}
-                onChange={(e) => handleChange('deconstructComplete', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.deconstructComplete || ''} onValueChange={(v) => handleChange('deconstructComplete', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">方案解构文档</label>
@@ -327,26 +272,20 @@ export function FormInputDialog({
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">中台把关意见</label>
-              <textarea
-                placeholder="请输入中台把关意见"
-                value={formData.reviewOpinion || ''}
-                onChange={(e) => handleChange('reviewOpinion', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入中台把关意见" value={formData.reviewOpinion || ''} onChange={(e) => handleChange('reviewOpinion', e.target.value)} className="w-full" rows={3} />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">把关结果</label>
-              <select
-                value={formData.reviewResult || ''}
-                onChange={(e) => handleChange('reviewResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="通过">通过</option>
-                <option value="待把关">待把关</option>
-                <option value="不通过">不通过</option>
-              </select>
+              <Select value={formData.reviewResult || ''} onValueChange={(v) => handleChange('reviewResult', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="通过">通过</SelectItem>
+                  <SelectItem value="待把关">待把关</SelectItem>
+                  <SelectItem value="不通过">不通过</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         );
@@ -356,23 +295,11 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">变更内容 <span className="text-red-500">*</span></label>
-              <textarea
-                placeholder="请输入变更内容"
-                value={formData.changeContent || ''}
-                onChange={(e) => handleChange('changeContent', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入变更内容" value={formData.changeContent || ''} onChange={(e) => handleChange('changeContent', e.target.value)} className="w-full" rows={3} />
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">变更原因</label>
-              <textarea
-                placeholder="请输入变更原因"
-                value={formData.changeReason || ''}
-                onChange={(e) => handleChange('changeReason', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={2}
-              />
+              <Textarea placeholder="请输入变更原因" value={formData.changeReason || ''} onChange={(e) => handleChange('changeReason', e.target.value)} className="w-full" rows={2} />
             </div>
           </div>
         );
@@ -382,24 +309,19 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">商机是否建档 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.assetArchive || ''}
-                onChange={(e) => handleChange('assetArchive', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="是">是</option>
-                <option value="否">否</option>
-              </select>
+              <Select value={formData.assetArchive || ''} onValueChange={(v) => handleChange('assetArchive', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="是">是</SelectItem>
+                  <SelectItem value="否">否</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">建档时间</label>
-              <input
-                type="date"
-                value={formData.archiveTime || ''}
-                onChange={(e) => handleChange('archiveTime', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              />
+              <Input type="date" value={formData.archiveTime || ''} onChange={(e) => handleChange('archiveTime', e.target.value)} className="w-full" />
             </div>
           </div>
         );
@@ -409,27 +331,21 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">服务界面类型 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.serviceDeskType || ''}
-                onChange={(e) => handleChange('serviceDeskType', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="电话">电话</option>
-                <option value="在线">在线</option>
-                <option value="电话+在线">电话+在线</option>
-                <option value="暂无">暂无</option>
-              </select>
+              <Select value={formData.serviceDeskType || ''} onValueChange={(v) => handleChange('serviceDeskType', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="电话">电话</SelectItem>
+                  <SelectItem value="在线">在线</SelectItem>
+                  <SelectItem value="电话+在线">电话+在线</SelectItem>
+                  <SelectItem value="暂无">暂无</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">服务记录说明</label>
-              <textarea
-                placeholder="请输入服务界面记录说明"
-                value={formData.serviceDeskRecord || ''}
-                onChange={(e) => handleChange('serviceDeskRecord', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                rows={3}
-              />
+              <Textarea placeholder="请输入服务界面记录说明" value={formData.serviceDeskRecord || ''} onChange={(e) => handleChange('serviceDeskRecord', e.target.value)} className="w-full" rows={3} />
             </div>
           </div>
         );
@@ -439,16 +355,16 @@ export function FormInputDialog({
           <div className="space-y-3">
             <div>
               <label className="text-xs text-gray-500 block mb-1">审核结果 <span className="text-red-500">*</span></label>
-              <select
-                value={formData.auditResult || ''}
-                onChange={(e) => handleChange('auditResult', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg text-sm"
-              >
-                <option value="">请选择</option>
-                <option value="通过">通过</option>
-                <option value="不通过">不通过</option>
-                <option value="待审核">待审核</option>
-              </select>
+              <Select value={formData.auditResult || ''} onValueChange={(v) => handleChange('auditResult', v)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="通过">通过</SelectItem>
+                  <SelectItem value="不通过">不通过</SelectItem>
+                  <SelectItem value="待审核">待审核</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <label className="text-xs text-gray-500 block mb-1">对比结果文件</label>
