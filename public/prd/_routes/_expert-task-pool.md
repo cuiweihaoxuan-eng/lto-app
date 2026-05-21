@@ -413,7 +413,7 @@ interface Report {
 }
 ```
 
-### DispatchItem 我的任务单项
+### DispatchItem 我的任务单项（个人视角）
 ```typescript
 interface DispatchItem {
   id: string;                  // ID
@@ -425,7 +425,11 @@ interface DispatchItem {
   customerAddress: string;      // 客户地址
   createTime: string;          // 创建时间
   dispatchTime: string;        // 派单时间
-  status: '待接单' | '已接单' | '已拒绝';  // 状态
+  status: '待派单' | '待接单' | '已接单' | '已拒绝';  // 个人接单状态
+  // 待派单：收到派单，等待确认
+  // 待接单：申请后等待发起人同意
+  // 已接单：已确认接单
+  // 已拒绝：拒绝接单/被拒绝
   area: string;                // 区域
   estimatedHours: number;       // 预计工时
   category?: string;            // 分类
