@@ -1,0 +1,697 @@
+/* PRD 悬浮按钮 */
+.prd-float-btn {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  z-index: 9999;
+  transition: all 0.2s;
+}
+
+.prd-float-btn:hover {
+  background: #5a6fd6;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* PRD 侧边栏面板 */
+.prd-sidebar {
+  position: relative;
+  height: 100%;
+  flex-shrink: 0;
+  width: 560px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 99998;
+  height: 100vh;
+  animation: prd-slide-in 0.3s ease;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes prd-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* PRD 面板 */
+.prd-panel {
+  background: #fff;
+  width: 560px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.prd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  height: 52px;
+  box-sizing: border-box;
+}
+
+.prd-header .prd-title h3 {
+  color: #fff;
+}
+
+.prd-header .prd-version-badge {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.prd-header .prd-unsaved-dot {
+  background: #fbbf24;
+}
+
+.prd-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prd-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.prd-version-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.prd-unsaved-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: prd-pulse 1.5s infinite;
+}
+
+@keyframes prd-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.prd-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.prd-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.prd-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.prd-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.prd-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+}
+
+.prd-btn-secondary {
+  background: #fff;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.prd-btn-secondary:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+/* PRD 面板头部操作按钮样式（覆盖默认样式） */
+.prd-header .prd-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.prd-header .prd-btn-primary {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.prd-header .prd-btn-primary:hover:not(:disabled) {
+  background: rgba(255,255,255,0.3);
+  box-shadow: none;
+}
+
+.prd-header .prd-btn-secondary {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.prd-header .prd-btn-secondary:hover:not(:disabled) {
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.5);
+}
+
+.prd-header .prd-btn-close {
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.1);
+}
+
+.prd-header .prd-btn-close:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.prd-btn-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #718096;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s;
+  margin-left: 4px;
+}
+
+.prd-btn-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #2d3748;
+}
+
+.prd-error-bar {
+  padding: 10px 20px;
+  background: #fed7d7;
+  color: #c53030;
+  font-size: 13px;
+  border-bottom: 1px solid #feb2b2;
+}
+
+.prd-loading {
+  padding: 60px 20px;
+  text-align: center;
+  color: #718096;
+}
+
+/* PRD 编辑器 */
+.prd-editor {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.prd-editor-textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  padding: 20px;
+  border: none;
+  resize: none;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  outline: none;
+  box-sizing: border-box;
+  background: #fafafa;
+  color: #2d3748;
+  overflow-y: auto;
+}
+
+.prd-editor-textarea:focus {
+  background: #fff;
+}
+
+/* PRD 内容区域 */
+.prd-content {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* 标题通用包装器 */
+.prd-heading-wrapper {
+  margin-bottom: 4px;
+}
+
+/* 折叠标题头部 */
+.prd-collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+  border-radius: 4px;
+}
+
+.prd-collapsible-header:hover {
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.prd-collapsible-header:hover .prd-collapse-icon {
+  background: #667eea;
+  color: #fff;
+}
+
+/* 折叠图标 */
+.prd-collapse-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  color: #667eea;
+  background: transparent;
+  border-radius: 3px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.prd-title-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+/* 标题样式 - 所有级别都有横线 */
+
+/* h1: 24px，最大加粗，底部粗横线 */
+.prd-content .prd-h1-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  padding: 12px 0 10px 0;
+  letter-spacing: 1px;
+}
+
+.prd-content .prd-h1-line {
+  height: 3px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+
+/* h2: 20px，加粗，底部细横线 */
+.prd-content .prd-h2-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+  padding: 14px 0 8px 0;
+}
+
+.prd-content .prd-h2-line {
+  height: 2px;
+  background: #667eea;
+  margin-bottom: 16px;
+}
+
+/* h3: 17px，加粗，底部细横线 */
+.prd-content .prd-h3-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #3d4a5c;
+  margin: 0;
+  padding: 12px 0 6px 0;
+}
+
+.prd-content .prd-h3-line {
+  height: 1px;
+  background: #667eea;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+/* h4: 15px，加粗，底部细横线 */
+.prd-content .prd-h4-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0;
+  padding: 10px 0 6px 0;
+}
+
+.prd-content .prd-h4-line {
+  height: 1px;
+  background: #a0aec0;
+  margin-bottom: 10px;
+}
+
+/* h5: 14px，加粗，底部细横线 */
+.prd-content .prd-h5-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5a6578;
+  margin: 0;
+  padding: 8px 0 4px 0;
+}
+
+.prd-content .prd-h5-line {
+  height: 1px;
+  background: #cbd5e0;
+  margin-bottom: 8px;
+}
+
+/* h6: 13px，加粗，底部细横线 */
+.prd-content .prd-h6-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0;
+  padding: 6px 0 4px 0;
+}
+
+.prd-content .prd-h6-line {
+  height: 1px;
+  background: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+/* h7: 12px，加粗，底部细横线 */
+.prd-content .prd-h7-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7b8794;
+  margin: 0;
+  padding: 5px 0 3px 0;
+}
+
+.prd-content .prd-h7-line {
+  height: 1px;
+  background: #edf2f7;
+  margin-bottom: 5px;
+}
+
+/* h8: 11px，加粗，底部细横线 */
+.prd-content .prd-h8-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8b95a5;
+  margin: 0;
+  padding: 4px 0 3px 0;
+}
+
+.prd-content .prd-h8-line {
+  height: 1px;
+  background: #f1f3f5;
+  margin-bottom: 4px;
+}
+
+/* h9: 10px，加粗，底部细横线 */
+.prd-content .prd-h9-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9ba3b5;
+  margin: 0;
+  padding: 4px 0 3px 0;
+}
+
+.prd-content .prd-h9-line {
+  height: 1px;
+  background: #f5f7fa;
+  margin-bottom: 3px;
+}
+
+/* h10: 9px，加粗，底部细横线 */
+.prd-content .prd-h10-title {
+  font-size: 9px;
+  font-weight: 600;
+  color: #abb1c5;
+  margin: 0;
+  padding: 3px 0 2px 0;
+}
+
+.prd-content .prd-h10-line {
+  height: 1px;
+  background: #f8fafc;
+  margin-bottom: 3px;
+}
+
+.prd-content p {
+  color: #4a5568;
+  line-height: 1.8;
+  margin: 0 0 14px 0;
+}
+
+.prd-content ul,
+.prd-content ol {
+  color: #4a5568;
+  margin: 0 0 14px 0;
+  padding-left: 24px;
+}
+
+.prd-content li {
+  margin: 6px 0;
+  line-height: 1.7;
+}
+
+.prd-content .prd-table-wrapper {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.prd-content .prd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.prd-content .prd-table th,
+.prd-content .prd-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.prd-content .prd-table th {
+  background: linear-gradient(135deg, #f5f7fa 0%, #edf2f7 100%);
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.prd-content .prd-table tr:last-child td {
+  border-bottom: none;
+}
+
+.prd-content .prd-table tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.prd-content .prd-code-inline {
+  background: #edf2f7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #667eea;
+}
+
+.prd-content .prd-pre {
+  background: #1a1a2e;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.prd-content .prd-pre code {
+  color: #e2e8f0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.prd-content .prd-checkbox {
+  margin-right: 8px;
+  accent-color: #667eea;
+}
+
+/* Mermaid图表样式 */
+.prd-content .prd-mermaid {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin: 16px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.prd-content .prd-mermaid svg {
+  max-width: 100%;
+  height: auto;
+  font-size: 11px !important;
+  background: transparent !important;
+}
+
+.prd-content .prd-mermaid svg text {
+  font-size: 11px !important;
+}
+
+/* 隐藏mermaid的额外背景层 */
+.prd-content .prd-mermaid svg g:first-child {
+  background: transparent !important;
+}
+
+.prd-content .prd-mermaid-error {
+  color: #c53030;
+  background: #fed7d7;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+/* 内容块可双击编辑 */
+.prd-content .prd-content-block {
+  cursor: text;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.prd-content .prd-content-block:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.prd-content .prd-content-block.editing {
+  outline: 2px solid #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  padding: 8px;
+  margin: -8px;
+}
+
+/* 行内编辑textarea */
+.prd-content .prd-inline-editor {
+  width: 100%;
+}
+
+.prd-content .prd-inline-textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  outline: none;
+  resize: vertical;
+  background: #fff;
+  color: #2d3748;
+  box-sizing: border-box;
+}
+
+.prd-content .prd-inline-textarea:focus {
+  box-shadow: inset 0 0 0 2px rgba(102, 126, 234, 0.3);
+}
+
+/* 行内编辑操作按钮 */
+.prd-content .prd-inline-actions {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 10002;
+}
+
+/* 段落编辑浮层（旧样式保留兼容） */
+.prd-paragraph-editor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: prd-fade-in 0.15s ease-out;
+}
+
+.prd-paragraph-editor {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.prd-paragraph-textarea {
+  width: 100%;
+  min-height: 200px;
+  max-height: 60vh;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.prd-paragraph-textarea:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.prd-paragraph-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
