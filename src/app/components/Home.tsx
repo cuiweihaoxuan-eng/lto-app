@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { FileText, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users, DollarSign, MoreHorizontal, Send, MessageSquare } from 'lucide-react';
+import { FileText, ListChecks, Package, ClipboardCheck, Bell, Briefcase, CheckSquare, Users, DollarSign, MoreHorizontal, Send, MessageSquare, Footprints } from 'lucide-react';
 
 export function Home() {
   const navigate = useNavigate();
@@ -12,6 +12,12 @@ export function Home() {
       icon: FileText,
       label: '线索管理',
       path: '#',
+    },
+    {
+      id: 'walk-visit',
+      icon: Footprints,
+      label: '自主走访',
+      path: '/walk-visit',
     },
     {
       id: 'opportunity-list',

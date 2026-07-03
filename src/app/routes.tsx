@@ -25,6 +25,8 @@ import { ValidOpportunityList } from './components/ValidOpportunityList';
 import { LargeOpportunityList } from './components/LargeOpportunityList';
 import { ProjectCommissionList } from './components/ProjectCommissionList';
 import { SignReportList } from './components/SignReportList';
+import { WalkVisitList } from './components/WalkVisitList';
+import { WalkVisitDetail } from './components/WalkVisitDetail';
 
 export const router = createBrowserRouter(
   [
@@ -133,6 +135,15 @@ export const router = createBrowserRouter(
     {
       path: '/ningbo-wallet/team-review/:saleOppId',
       Component: NbTeamReview,
+    },
+    // 走访模块
+    {
+      path: '/walk-visit',
+      Component: WalkVisitList,
+    },
+    {
+      path: '/walk-visit/:walkVisitId',
+      Component: WalkVisitDetail,
     },
   ],
   {

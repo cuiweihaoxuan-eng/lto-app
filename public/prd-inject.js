@@ -179,27 +179,33 @@
     return { content: '', source: null, mode: 'api' };
   }
 
-  // ── 加载 PRD（静态模式优先，GitHub Pages 部署）─────────────────────────
+  // ── 加载 PRD（优先 API 模式支持编辑，静态模式兜底）───────────────────────
   async function loadPRD(route) {
     currentRoute = route;
     apiMode = false;
     staticMode = false;
+    let result = null;
 
-    // 优先从 window.__PRD_DATA__ 静态读取（GitHub Pages 模式）
-    let result = loadPRDFromDataVar(route);
-    if (result) {
-      staticMode = true;
+    // 优先尝试 API 模式（支持编辑）
+    result = await loadPRDApi(route);
+    if (result.content) {
+      apiMode = true;
     } else {
-      // 降级到静态文件
-      result = await loadPRDStatic(route);
-      if (result.content) {
+      // 降级到静态模式（GitHub Pages / 无服务）
+      result = loadPRDFromDataVar(route);
+      if (result) {
         staticMode = true;
+      } else {
+        result = await loadPRDStatic(route);
+        if (result.content) {
+          staticMode = true;
+        }
       }
     }
 
-    currentMarkdown = result.content || '';
+    currentMarkdown = result?.content || '';
     originalMarkdown = currentMarkdown;
-    renderView(route, result.source);
+    renderView(route, result?.source || 'unknown');
   }
 
   // ── 样式注入 ───────────────────────────────────────────

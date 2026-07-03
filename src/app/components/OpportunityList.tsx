@@ -23,7 +23,7 @@ interface Opportunity {
   projectCode: string;
 }
 
-const mockOpportunities: Opportunity[] = [
+export const mockOpportunities: Opportunity[] = [
   {
     id: '1',
     name: '宁波市政府弱电系统改造项目',
