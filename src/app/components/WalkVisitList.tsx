@@ -282,6 +282,8 @@ export function WalkVisitList() {
   const [walkVisits, setWalkVisits] = useState<WalkVisit[]>(mockWalkVisits);
   // 弹窗：记录 id + 类型
   const [popup, setPopup] = useState<{ visitId: string; type: 'lead' | 'opp' } | null>(null);
+  // 商机决策弹窗：当前打开决策弹窗的走访 id
+  const [decisionVisitId, setDecisionVisitId] = useState<string | null>(null);
   // 弹窗里多选的记录 id 集合（点击行切换选中状态）
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   // 弹窗搜索关键词
@@ -330,31 +332,37 @@ export function WalkVisitList() {
     return true;
   });
 
-  const handleTagClick = (visitId: string, tag: 'none' | 'lead' | 'opp', e: React.MouseEvent) => {
+  const handleTagClick = (visitId: string, _tag: 'none' | 'lead' | 'opp', e: React.MouseEvent) => {
     e.stopPropagation();
-    // 找到对应走访
-    const visit = walkVisits.find((v) => v.id === visitId);
-    if (!visit) return;
+    // 顶部紧凑胶囊：点击后打开该走访的商机决策弹窗
+    setDecisionVisitId(visitId);
+  };
 
-    // 如果当前标签已经激活，且该项有内容，则打开弹窗（预选已关联数据）
-    if (visit.tagState === tag && (tag === 'lead' || tag === 'opp')) {
-      openPopup(visitId, tag);
-      return;
+  // 商机决策弹窗中点击某个选项的回调
+  // - none: 直接切激活态 + 关闭决策弹窗
+  // - lead / opp: 关闭决策弹窗，立即打开对应的多选关联弹窗
+  const handleDecision = (decision: 'none' | 'lead' | 'opp') => {
+    if (!decisionVisitId) return;
+    const visitId = decisionVisitId;
+    setDecisionVisitId(null);
+    if (decision === 'none') {
+      // 无商机：仅切激活态，清空关联内容
+      setWalkVisits((prev) =>
+        prev.map((v) => (v.id === visitId ? { ...v, tagState: 'none', leads: [], opportunities: [] } : v))
+      );
+    } else {
+      // 有线索 / 有商机：先确保 tagState 切到对应态，再打开弹窗
+      setWalkVisits((prev) =>
+        prev.map((v) => (v.id === visitId ? { ...v, tagState: decision } : v))
+      );
+      openPopup(visitId, decision);
     }
+  };
 
-    // 更新激活标签
-    setWalkVisits((prev) =>
-      prev.map((v) => (v.id === visitId ? { ...v, tagState: tag } : v))
-    );
-
-    // 如果切换到 lead/opp 且该客户没有内容，给出占位提示
-    if (tag === 'lead' && visit.leads.length === 0) {
-      // 不打开弹窗，状态切换但弹窗在卡片外提示
-      // 这里选择直接切激活态即可；如果要弹窗，可改为 setPopup(...)；保留空数据体验
-    }
-    if (tag === 'opp' && visit.opportunities.length === 0) {
-      // 同上
-    }
+  // 点击底部"商机决策"按钮：打开该走访的决策弹窗
+  const handleDecisionButtonClick = (visitId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDecisionVisitId(visitId);
   };
 
   const currentVisit = popup ? walkVisits.find((v) => v.id === popup.visitId) : null;
@@ -618,32 +626,63 @@ export function WalkVisitList() {
               );
             })()}
 
-            {/* 底部三态按钮组 - 商情"关联商机"按钮样式（与顶部紧凑组共享状态） */}
-            <div className="mt-3 p-3 bg-gray-50 rounded-xl flex items-center gap-2 overflow-x-auto">
-              {tagOrder.map((tagKey) => {
-                const cfg = tagConfig[tagKey];
-                const active = visit.tagState === tagKey;
-                // 复用商情管理 BusinessInfoList 中"关联商机"按钮的样式：
-                // px-3 py-1.5 text-xs rounded-xl，蓝底/灰底 + 白字
-                const baseClass =
-                  'px-3 py-1.5 text-xs rounded-xl whitespace-nowrap flex-shrink-0 transition-colors';
-                const variantClass = active
-                  ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                  : 'bg-gray-500 hover:bg-gray-600 text-white';
-                return (
-                  <button
-                    key={tagKey}
-                    onClick={(e) => handleTagClick(visit.id, tagKey, e)}
-                    className={`${baseClass} ${variantClass}`}
-                  >
-                    {cfg.label}
-                  </button>
-                );
-              })}
+            {/* 底部"商机决策"按钮 - 点击弹出决策弹窗 */}
+            <div className="mt-3">
+              <button
+                onClick={(e) => handleDecisionButtonClick(visit.id, e)}
+                className="w-full px-3 py-2 text-sm rounded-xl bg-blue-500 hover:bg-blue-600 text-white transition-colors"
+              >
+                商机决策
+              </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* 商机决策弹窗：底部弹出，三选一（无商机 / 有线索 / 有商机） */}
+      <Dialog
+        open={decisionVisitId !== null}
+        onOpenChange={(open) => {
+          if (!open) setDecisionVisitId(null);
+        }}
+      >
+        <DialogContent className="max-w-full w-full p-0 gap-0 bg-white rounded-t-2xl fixed bottom-0 top-auto left-0 right-0 translate-x-0 translate-y-0 h-auto max-h-[70vh] flex flex-col border-0">
+          <div className="flex items-center justify-between px-6 py-4 border-b flex-shrink-0">
+            <div className="w-10" />
+            <h2 className="text-lg font-medium flex-1 text-center">商机决策</h2>
+            <button
+              onClick={() => setDecisionVisitId(null)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6 space-y-2">
+            {[
+              { value: 'none' as const, label: '无商机' },
+              { value: 'lead' as const, label: '有线索' },
+              { value: 'opp' as const, label: '有商机' },
+            ].map((opt) => {
+              const current = walkVisits.find((v) => v.id === decisionVisitId);
+              const active = current?.tagState === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  onClick={() => handleDecision(opt.value)}
+                  className={`w-full py-3 px-4 rounded-xl text-left transition-colors ${
+                    active
+                      ? 'bg-blue-50 text-blue-700 border border-blue-500'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* 筛选 Sheet 弹窗：点击胶囊后从底部弹出，点选即生效 */}
       <Dialog
